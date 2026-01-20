@@ -1,4 +1,4 @@
-import { registerUser } from "./auth.service.js";
+import { loginUser, registerUser } from "./auth.service.js";
 import { sendVerificationEmail } from "../../utils/email.js";
 import User from "../users/user.model.js";
 import { env } from "../../config/env.js";
@@ -54,6 +54,22 @@ export const verifyEmail = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       error: "Email verification failed",
+    });
+  }
+};
+
+export const login = async (req, res) => {
+  try {
+    const { token, user } = await loginUser(req.body);
+
+    res.json({
+      message: "Login successful",
+      token,
+      user,
+    });
+  } catch (error) {
+    res.status(401).json({
+      error: error.message,
     });
   }
 };
