@@ -2,6 +2,7 @@ import { loginUser, registerUser } from "./auth.service.js";
 import { sendVerificationEmail } from "../../utils/email.js";
 import User from "../users/user.model.js";
 import { env } from "../../config/env.js";
+import { generateJwtToken } from "../../utils/jwt.js";
 
 export const signup = async (req, res) => {
   try {
@@ -72,4 +73,24 @@ export const login = async (req, res) => {
       error: error.message,
     });
   }
+};
+
+export const socialLoginSuccess = async (req, res) => {
+  const user = req.user;
+
+  const token = generateJwtToken({
+    userId: user._id,
+    role: user.role,
+  });
+
+  res.json({
+    message: "Social login successful",
+    token,
+    user: {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      providers: user.providers,
+    },
+  });
 };
