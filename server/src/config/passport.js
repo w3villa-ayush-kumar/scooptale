@@ -45,7 +45,16 @@ passport.use(
     },
     async (_, __, profile, done) => {
       try {
-        const email = profile.emails[0].value;
+        const email = profile.emails?.[0]?.value;
+
+        if (!email) {
+          return done(
+            new Error(
+              "Facebook login failed: email permission missing. Please use email signup or Google login.",
+            ),
+            null,
+          );
+        }
 
         let user = await User.findOne({ email });
 

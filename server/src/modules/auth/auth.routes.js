@@ -28,7 +28,17 @@ router.get(
 );
 router.get(
   "/facebook/callback",
-  passport.authenticate("facebook", { session: false }),
+  passport.authenticate("facebook", {
+    session: false,
+    failureRedirect: "/auth/facebook/failure",
+  }),
   socialLoginSuccess,
 );
+router.get("/facebook/failure", (req, res) => {
+  res.status(400).json({
+    error:
+      "Facebook login failed. Your Facebook account does not have an email. Please sign up using email or Google.",
+  });
+});
+
 export default router;

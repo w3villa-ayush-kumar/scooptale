@@ -48,14 +48,15 @@ const userSchema = new mongoose.Schema(
       lng: Number,
     },
 
-    currentPlam: {
+    currentPlan: {
       type: String,
+      enum: ["Free", "Silver", "Gold"],
       default: "Free",
     },
 
-    planStartTime: Date,
+    planActivatedAt: Date,
 
-    planEndTime: Date,
+    planExpiresAt: Date,
 
     isPlanActive: {
       type: Boolean,

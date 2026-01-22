@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import authRoutes from "./modules/auth/auth.routes.js";
 import userRoutes from "./modules/users/user.routes.js";
+import planRoutes from "./modules/plans/plan.routes.js";
 import passport from "passport";
 import "./config/passport.js";
 
@@ -17,5 +18,6 @@ app.get("/", (req, res) => {
 
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
+app.use("/plans", planRoutes);
 
 export default app;
