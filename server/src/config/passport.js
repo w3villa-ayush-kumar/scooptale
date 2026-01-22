@@ -43,10 +43,8 @@ passport.use(
       callbackURL: `${process.env.BACKEND_URL}/auth/facebook/callback`,
       profileFields: ["id", "displayName", "emails"],
     },
-    async (accessToken, refreshToken, profile, done) => {
+    async (_, __, profile, done) => {
       try {
-        console.log("✅ Google profile received");
-        console.log(profile);
         const email = profile.emails[0].value;
 
         let user = await User.findOne({ email });

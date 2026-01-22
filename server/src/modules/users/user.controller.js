@@ -60,3 +60,27 @@ export const updateMyProfile = async (req, res) => {
     });
   }
 };
+
+export const uploadProfilePicture = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId);
+
+    if (!user) {
+      return res.status(404).json({
+        error: "User not found",
+      });
+    }
+
+    user.profileImageUrl = req.file.path || req.file.secure_url;
+    await user.save();
+
+    res.json({
+      message: "Profile picture updated successfully",
+      profileImageUrl: user.profileImageUrl,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: "Failed to update profile picture",
+    });
+  }
+};
