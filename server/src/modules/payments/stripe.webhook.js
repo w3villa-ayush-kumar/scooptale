@@ -19,7 +19,7 @@ export const stripeWebhook = async (req, res) => {
     const session = event.data.object;
     const { userId, plan, duration } = session.metadata;
 
-    const expiresAt = new Data();
+    const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours() + Number(duration));
 
     await User.findByIdAndUpdate(userId, {
