@@ -3,26 +3,37 @@ import { stripe } from "../../config/stripe.js";
 import User from "../users/user.model.js";
 
 export const stripeWebhook = async (req, res) => {
-  console.log("🔥 ENTERED stripeWebhook");
-
   const sig = req.headers["stripe-signature"];
-  console.log("🧾 Stripe signature present:", !!sig);
-
   let event;
-
   try {
     event = stripe.webhooks.constructEvent(
       req.body,
       sig,
       env.stripeWebhookSecret,
     );
-    console.log("✅ Signature verified");
   } catch (err) {
-    console.error("❌ Signature verification failed:", err.message);
-    return res.status(400).send("Webhook signature failed");
+    return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  console.log("📦 Event type:", event.type);
+  if (event.type === "checkout.session.completed") {
+    const session = event.data.object;
+    const { userId, plan, duration } = session.metadata;
+
+    const expiresAt = new Date();
+    expiresAt.setHours(expiresAt.getHours() + Number(duration));
+
+    console.log("🧪 Webhook metadata values:", {
+      userId,
+      plan,
+      duration,
+    });
+
+    await User.findByIdAndUpdate(userId, {
+      currentPlan: plan,
+      planActivatedAt: new Date(),
+      planExpiresAt: expiresAt,
+    });
+  }
 
   res.json({ received: true });
 };
