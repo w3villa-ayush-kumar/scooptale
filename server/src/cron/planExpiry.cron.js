@@ -19,7 +19,7 @@ export const startPlanExpiryCron = () => {
         await user.save();
       }
 
-      if (expiredUsers.length) {
+      if (expiredUsers.length > 0) {
         console.log(
           `Expired ${expiredUsers.length} ${expiredUsers.length < 2 ? "plan" : "plans"}`,
         );

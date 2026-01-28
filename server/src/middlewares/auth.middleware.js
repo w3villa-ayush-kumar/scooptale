@@ -22,3 +22,14 @@ export const authMiddleware = (req, res, next) => {
     });
   }
 };
+
+export const roleMiddleware = (requiredRole) => {
+  return (req, res, next) => {
+    if (!req.user || req.user.role !== requiredRole) {
+      return res.status(403).json({
+        error: "Forbidden: insuffient permission",
+      });
+    }
+    next();
+  };
+};

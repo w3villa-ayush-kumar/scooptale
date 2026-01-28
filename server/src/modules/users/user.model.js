@@ -50,8 +50,8 @@ const userSchema = new mongoose.Schema(
 
     currentPlan: {
       type: String,
-      enum: ["Free", "Silver", "Gold"],
-      default: "Free",
+      enum: ["free", "silver", "gold"],
+      default: "free",
     },
 
     planActivatedAt: Date,

@@ -6,6 +6,7 @@ import userRoutes from "./modules/users/user.routes.js";
 import planRoutes from "./modules/plans/plan.routes.js";
 import movieRoutes from "./modules/movies/movie.routes.js";
 import paymentRoutes from "./modules/payments/payment.routes.js";
+import adminRoutes from "./modules/admin/admin.routes.js";
 import passport from "passport";
 import "./config/passport.js";
 
@@ -31,5 +32,6 @@ app.use("/user", userRoutes);
 app.use("/plans", planRoutes);
 app.use("/movies", movieRoutes);
 app.use("/payments", paymentRoutes);
+app.use("/admin", adminRoutes);
 
 export default app;

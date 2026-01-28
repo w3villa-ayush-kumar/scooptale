@@ -24,10 +24,14 @@ export const createCheckoutSession = async (user, { plan, duration }) => {
   return stripe.checkout.sessions.create({
     mode: "payment",
     payment_method_types: ["card"],
-    customer_email: user.email,
+
+    billing_address_collection: "required",
+    shipping_address_collection: {
+      allowed_countries: ["IN"],
+    },
 
     metadata: {
-      userId: user._id.toString(),
+      userId: user.userId,
       plan,
       duration,
     },

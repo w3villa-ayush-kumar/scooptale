@@ -1,6 +1,6 @@
-import { env } from "../../config/env";
-import { stripe } from "../../config/stripe";
-import User from "../users/user.model";
+import { env } from "../../config/env.js";
+import { stripe } from "../../config/stripe.js";
+import User from "../users/user.model.js";
 
 export const stripeWebhook = async (req, res) => {
   const sig = req.headers["stripe-signature"];
