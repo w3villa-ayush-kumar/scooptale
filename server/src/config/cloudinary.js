@@ -1,9 +1,10 @@
 import cloudinary from "cloudinary";
+import { env } from "./env.js";
 
 cloudinary.v2.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+  cloud_name: env.cloudinaryCloudName,
+  api_key: env.cloudinaryApiKey,
+  api_secret: env.cloudinaryApiSecret,
 });
 
 export default cloudinary;
