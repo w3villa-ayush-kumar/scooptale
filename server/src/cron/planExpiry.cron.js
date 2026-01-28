@@ -2,7 +2,7 @@ import cron from "node-cron";
 import User from "../modules/users/user.model.js";
 
 export const startPlanExpiryCron = () => {
-  cron.schedule("*/1 * * * *", async () => {
+  cron.schedule("*/5 * * * *", async () => {
     try {
       const now = new Date();
 
@@ -12,11 +12,11 @@ export const startPlanExpiryCron = () => {
       });
 
       for (const user of expiredUsers) {
-        ((user.currentPlan = "Free"),
-          (user.isPlanActive = false),
-          (user.planActivatedAt = null),
-          (user.planExpiresAt = null),
-          await user.save());
+        user.currentPlan = "Free";
+        user.isPlanActive = false;
+        user.planActivatedAt = null;
+        user.planExpiresAt = null;
+        await user.save();
       }
 
       if (expiredUsers.length) {
@@ -25,7 +25,7 @@ export const startPlanExpiryCron = () => {
         );
       }
     } catch (error) {
-      console.error("Cron error:", err.message);
+      console.error("Cron error:", error.message);
     }
   });
 };

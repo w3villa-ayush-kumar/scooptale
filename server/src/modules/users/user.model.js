@@ -58,6 +58,8 @@ const userSchema = new mongoose.Schema(
 
     planExpiresAt: Date,
 
+    stripeCustomerId: String,
+
     isPlanActive: {
       type: Boolean,
       default: false,

@@ -7,6 +7,7 @@ export const env = {
   mongoUri: process.env.MONGO_URI,
   jwtSecret: process.env.JWT_SECRET,
   backendUrl: process.env.BACKEND_URL,
+  clientUrl: process.env.CLIENT_URL,
 
   emailHost: process.env.EMAIL_HOST,
   emailPort: process.env.EMAIL_POST,
@@ -26,4 +27,7 @@ export const env = {
 
   tmdbApiKey: process.env.TMDB_API_KEY,
   tmdbBaseUrl: process.env.TMDB_BASE_URL,
+
+  stripeSecretKey: process.env.STRIPE_SECRET_KEY,
+  stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
 };
