@@ -22,17 +22,17 @@ export const stripeWebhook = async (req, res) => {
     const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours() + Number(duration));
 
-    console.log("🧪 Webhook metadata values:", {
+    await User.findByIdAndUpdate(
       userId,
-      plan,
-      duration,
-    });
-
-    await User.findByIdAndUpdate(userId, {
-      currentPlan: plan,
-      planActivatedAt: new Date(),
-      planExpiresAt: expiresAt,
-    });
+      {
+        stripeCustomerId: session.customer,
+        currentPlan: plan,
+        isPlanActive: true,
+        planActivatedAt: new Date(),
+        planExpiresAt: expiresAt,
+      },
+      { new: true },
+    );
   }
 
   res.json({ received: true });
