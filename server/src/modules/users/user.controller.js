@@ -1,13 +1,16 @@
-import User from "./user.model.js";
+import {
+  findUserById,
+  updateUserProfile,
+  updateProfileImage,
+  getProfileForDownload,
+} from "./user.service.js";
 
 export const getMyProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.userId);
+    const user = await findUserById(req.user.userId);
 
     if (!user) {
-      return res.status(404).json({
-        error: "User not found",
-      });
+      return res.status(404).json({ error: "User not found" });
     }
 
     res.json({
@@ -21,30 +24,14 @@ export const getMyProfile = async (req, res) => {
       currentPlan: user.currentPlan,
       isEmailVerified: user.isEmailVerified,
     });
-  } catch (error) {
-    res.status(500).json({
-      error: "Failed to fetch profile",
-    });
+  } catch {
+    res.status(500).json({ error: "Failed to fetch profile" });
   }
 };
 
 export const updateMyProfile = async (req, res) => {
   try {
-    const { name, address, location } = req.body;
-
-    const user = await User.findById(req.user.userId);
-
-    if (!user) {
-      return res.status(404).json({
-        error: "User not found",
-      });
-    }
-
-    if (name) user.name = name;
-    if (address) user.address = address;
-    if (location) user.location = location;
-
-    await user.save();
+    const user = await updateUserProfile(req.user.userId, req.body);
 
     res.json({
       message: "Profile updated successfully",
@@ -55,32 +42,34 @@ export const updateMyProfile = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({
-      error: "Failed to update profile",
-    });
+    res.status(404).json({ error: error.message });
   }
 };
 
 export const uploadProfilePicture = async (req, res) => {
   try {
-    const user = await User.findById(req.user.userId);
+    const imageUrl = req.file.path || req.file.secure_url;
 
-    if (!user) {
-      return res.status(404).json({
-        error: "User not found",
-      });
-    }
-
-    user.profileImageUrl = req.file.path || req.file.secure_url;
-    await user.save();
+    const profileImageUrl = await updateProfileImage(req.user.userId, imageUrl);
 
     res.json({
       message: "Profile picture updated successfully",
-      profileImageUrl: user.profileImageUrl,
+      profileImageUrl,
     });
   } catch (error) {
-    res.status(500).json({
-      error: "Failed to update profile picture",
-    });
+    res.status(404).json({ error: error.message });
+  }
+};
+
+export const downloadMyProfile = async (req, res) => {
+  try {
+    const profileData = await getProfileForDownload(req.user.userId);
+
+    res.setHeader("Content-Disposition", "attachment; filename=profile.json");
+    res.setHeader("Content-Type", "application/json");
+
+    res.status(200).send(JSON.stringify(profileData, null, 2));
+  } catch (error) {
+    res.status(404).json({ error: error.message });
   }
 };
