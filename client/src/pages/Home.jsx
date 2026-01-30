@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
-import Navbar from "../components/Navbar";
 import Header from "../components/Header";
 import TrendingSection from "../components/TrendingSection";
 
@@ -25,7 +24,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100">
-      <Navbar />
       <Header movies={movies} loading={loading} />
       <TrendingSection movies={movies} loading={loading} />
 

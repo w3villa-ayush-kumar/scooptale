@@ -3,9 +3,7 @@ import MovieCard from "./MovieCard";
 export default function TrendingSection({ movies = [], loading }) {
   return (
     <section className="relative overflow-hidden py-28">
-      {/* Background */}
       <div className="absolute inset-0 bg-slate-950 -z-10" />
-      {/* Glow accents */}
       <div
         className="absolute -top-40 right-0 h-125 w-125
                       rounded-full bg-green-500/15 blur-3xl -z-10"

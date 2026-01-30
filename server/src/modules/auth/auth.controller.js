@@ -83,14 +83,5 @@ export const socialLoginSuccess = async (req, res) => {
     role: user.role,
   });
 
-  res.json({
-    message: "Social login successful",
-    token,
-    user: {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      providers: user.providers,
-    },
-  });
+  res.redirect(`${env.clientUrl}/oauth-success?token=${token}`);
 };

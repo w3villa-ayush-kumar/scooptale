@@ -12,7 +12,7 @@ export const startPlanExpiryCron = () => {
       });
 
       for (const user of expiredUsers) {
-        user.currentPlan = "Free";
+        user.currentPlan = "free";
         user.isPlanActive = false;
         user.planActivatedAt = null;
         user.planExpiresAt = null;
