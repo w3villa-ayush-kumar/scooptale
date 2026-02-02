@@ -12,7 +12,7 @@ export default function OAuthSuccess() {
 
     if (token) {
       login(token); // 🔑 SAME FLOW
-      navigate("/");
+      navigate("/profile");
     } else {
       navigate("/login");
     }

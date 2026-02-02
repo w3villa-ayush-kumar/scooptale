@@ -1,13 +1,11 @@
 import { useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import OAuthButtons from "../components/OAuthButtons";
 import api from "../services/api";
 import { AppContext } from "../context/AppContext";
-import AuthHomeLink from "../components/AuthHomeLink";
 import Navbar from "../components/Navbar";
 
 export default function Login() {
-  const navigate = useNavigate();
   const { login } = useContext(AppContext);
 
   const [form, setForm] = useState({
@@ -27,8 +25,6 @@ export default function Login() {
       const { data } = await api.post("/auth/login", form);
 
       login(data.token);
-
-      navigate("/");
     } catch (err) {
       setError(err.response?.data?.error || "Login failed");
     } finally {

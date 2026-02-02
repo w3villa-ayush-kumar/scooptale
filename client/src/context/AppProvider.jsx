@@ -18,6 +18,13 @@ export default function AppProvider({ children }) {
     setToken(null);
   };
 
+  const updateUser = (newData) => {
+    setUser((prev) => ({
+      ...prev,
+      ...newData,
+    }));
+  };
+
   useEffect(() => {
     const loadUser = async () => {
       if (!token) {
@@ -26,11 +33,7 @@ export default function AppProvider({ children }) {
       }
 
       try {
-        const { data } = await api.get("/user/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const { data } = await api.get("/user/me");
         setUser(data);
       } catch (err) {
         console.error(err);
@@ -43,8 +46,27 @@ export default function AppProvider({ children }) {
     loadUser();
   }, [token]);
 
+  const refreshUser = async () => {
+    if (!token) return;
+
+    const { data } = await api.get("/user/me");
+
+    setUser(data);
+  };
+
   return (
-    <AppContext.Provider value={{ user, token, login, logout, loadingUser }}>
+    <AppContext.Provider
+      value={{
+        user,
+        token,
+        login,
+        logout,
+        loadingUser,
+        updateUser,
+        setUser,
+        refreshUser,
+      }}
+    >
       {children}
     </AppContext.Provider>
   );
