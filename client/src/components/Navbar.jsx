@@ -3,7 +3,7 @@ import logo from "../assets/scooptale.png";
 import { useEffect, useState } from "react";
 import { useApp } from "../context/useApp";
 
-export default function Navbar() {
+export default function Navbar({ variant = "default" }) {
   const { user, logout, loadingUser } = useApp();
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
@@ -23,30 +23,34 @@ export default function Navbar() {
   return (
     <nav className="sticky top-3 z-50 flex justify-center">
       <div className="relative flex items-center">
-        {!loadingUser && !user ? (
-          <Link
-            to="/login"
-            className={`${scrolled ? "px-5 py-1 opacity-70" : "px-7 py-3"}
+        {variant === "default" && (
+          <>
+            {!loadingUser && !user ? (
+              <Link
+                to="/login"
+                className={`${scrolled ? "px-5 py-1 opacity-70" : "px-7 py-3"}
               bg-blue-500 hover:bg-blue-600 rounded-l-full transition-all duration-400 ease-out`}
-          >
-            Login
-          </Link>
-        ) : user ? (
-          <button
-            onClick={handleLogout}
-            className={`${scrolled ? "px-5 py-1 opacity-70" : "px-7 py-3"}
+              >
+                Login
+              </Link>
+            ) : user ? (
+              <button
+                onClick={handleLogout}
+                className={`${scrolled ? "px-5 py-1 opacity-70" : "px-7 py-3"}
               bg-red-500 hover:bg-red-600 rounded-l-full transition-all duration-400 ease-out`}
-          >
-            Logout
-          </button>
-        ) : null}
+              >
+                Logout
+              </button>
+            ) : null}
+          </>
+        )}
 
         <Link
           to="/"
           className="relative z-10 -mx-3 flex items-center justify-center"
         >
           <div
-            className={` rounded-full
+            className={`${variant === "auth" ? "fixed top-1 left-1/2 -translate-x-1/2 z-50" : ""} rounded-full
                        bg-slate-950
                        border border-white/20
                        shadow-2xl
@@ -60,24 +64,27 @@ export default function Navbar() {
             />
           </div>
         </Link>
-
-        {!loadingUser && !user ? (
-          <Link
-            to="/signup"
-            className={`${scrolled ? "px-5 py-1 opacity-70" : "px-7 py-3"}
+        {variant === "default" && (
+          <>
+            {!loadingUser && !user ? (
+              <Link
+                to="/signup"
+                className={`${scrolled ? "px-5 py-1 opacity-70" : "px-7 py-3"}
               bg-blue-500 hover:bg-blue-600 rounded-r-full transition-all duration-400 ease-out`}
-          >
-            Sign up
-          </Link>
-        ) : user ? (
-          <Link
-            to="/profile"
-            className={`${scrolled ? "px-4 py-1" : "px-6 py-3"}
+              >
+                Sign up
+              </Link>
+            ) : user ? (
+              <Link
+                to="/profile"
+                className={`${scrolled ? "px-4 py-1" : "px-6 py-3"}
               bg-green-500 hover:bg-green-600 rounded-r-full transition-all duration-400 ease-out`}
-          >
-            {firstName}
-          </Link>
-        ) : null}
+              >
+                {firstName}
+              </Link>
+            ) : null}
+          </>
+        )}
       </div>
     </nav>
   );

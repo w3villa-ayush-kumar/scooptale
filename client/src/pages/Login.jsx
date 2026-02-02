@@ -4,6 +4,7 @@ import OAuthButtons from "../components/OAuthButtons";
 import api from "../services/api";
 import { AppContext } from "../context/AppContext";
 import AuthHomeLink from "../components/AuthHomeLink";
+import Navbar from "../components/Navbar";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -41,7 +42,8 @@ export default function Login() {
                  bg-linear-to-br from-slate-950 via-slate-900 to-black
                  flex items-center justify-center text-white px-6"
     >
-      <AuthHomeLink />
+      {/* <AuthHomeLink /> */}
+      <Navbar variant="auth" />
       <div className="absolute -top-40 -left-40 w-125 h-125 bg-green-500/20 rounded-full blur-3xl" />
       <div className="absolute bottom-0 right-0 w-100 h-100 bg-emerald-400/15 rounded-full blur-3xl" />
 

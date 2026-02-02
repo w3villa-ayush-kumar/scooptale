@@ -5,6 +5,7 @@ import Signup from "./pages/Signup";
 import OAuthCallback from "./pages/OAuthCallback";
 import OAuthSuccess from "./pages/OAuthSuccess";
 import AppLayout from "./layout/AppLayout";
+import Profile from "./pages/Profile";
 
 export default function App() {
   return (
@@ -12,8 +13,9 @@ export default function App() {
       <Routes>
         <Route element={<AppLayout />}>
           <Route path="/" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
-        <Route path="/" element={<Home />} />
+
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/auth/google/callback" element={<OAuthCallback />} />

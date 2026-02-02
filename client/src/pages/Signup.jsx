@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import OAuthButtons from "../components/OAuthButtons";
 import api from "../services/api";
 import AuthHomeLink from "../components/AuthHomeLink";
+import Navbar from "../components/Navbar";
 
 export default function Signup() {
   const [form, setForm] = useState({
@@ -38,7 +39,8 @@ export default function Signup() {
                     bg-linear-to-br from-slate-950 via-slate-900 to-black
                     flex items-center justify-center text-white px-6"
     >
-      <AuthHomeLink />
+      {/* <AuthHomeLink /> */}
+      <Navbar variant="auth" />
       <div
         className="absolute -top-40 -left-40 w-125 h-125
                       bg-green-500/20 rounded-full blur-3xl"
