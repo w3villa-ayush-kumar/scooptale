@@ -18,7 +18,7 @@ export default function Profile() {
       </div>
     );
   }
-
+  console.log(user.location);
   return (
     <div className="relative min-h-screen bg-linear-to-br from-slate-950 via-slate-900 to-black text-white px-6 py-24">
       <div className="absolute -top-32 -left-32 w-125 h-125 bg-green-500/10 blur-3xl rounded-full" />
@@ -56,7 +56,7 @@ export default function Profile() {
               <div className="bg-white/5 p-5 rounded-2xl border border-white/10">
                 <p className="text-slate-400 text-sm">Location</p>
                 <p className="mt-1">
-                  {user.location
+                  {user.location?.lat != null && user.location?.lng != null
                     ? `${user.location.lat}, ${user.location.lng}`
                     : "Not added"}
                 </p>
