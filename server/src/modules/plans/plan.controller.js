@@ -4,7 +4,7 @@ import User from "../users/user.model.js";
 export const activatePlan = async (req, res) => {
   try {
     const { planName } = req.body;
-    const plan = PLANS[planName];
+    const plan = PLANS[planName.toLowerCase()];
 
     if (!plan) {
       return res.status(400).json({

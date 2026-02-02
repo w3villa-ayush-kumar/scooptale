@@ -6,6 +6,8 @@ import planRoutes from "./modules/plans/plan.routes.js";
 import movieRoutes from "./modules/movies/movie.routes.js";
 import paymentRoutes from "./modules/payments/payment.routes.js";
 import adminRoutes from "./modules/admin/admin.routes.js";
+import userMovieRoutes from "./modules/userMovies/userMovie.routes.js";
+import reviewRoutes from "./modules/reviews/review.routes.js";
 import passport from "passport";
 import "./config/passport.js";
 import { stripeWebhook } from "./modules/payments/stripe.webhook.js";
@@ -33,5 +35,7 @@ app.use("/plans", planRoutes);
 app.use("/movies", movieRoutes);
 app.use("/payments", paymentRoutes);
 app.use("/admin", adminRoutes);
+app.use("/user-movies", userMovieRoutes);
+app.use("/reviews", reviewRoutes);
 
 export default app;

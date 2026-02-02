@@ -1,11 +1,23 @@
 export const PLANS = {
-  Free: {
+  free: {
     durationHours: 0,
+    limits: {
+      saves: 3,
+      reviews: 2,
+    },
   },
-  Silver: {
+  silver: {
     durationHours: 1,
+    limits: {
+      saves: 10,
+      reviews: 20,
+    },
   },
-  Gold: {
+  gold: {
     durationHours: 6,
+    limits: {
+      saves: Infinity,
+      reviews: Infinity,
+    },
   },
 };
