@@ -99,3 +99,39 @@ export const getUserMovies = async (userId) => {
 
   return movies;
 };
+
+export const getUserShelves = async (userId) => {
+  const movies = await UserMovie.find({ userId })
+    .sort({ updatedAt: -1 })
+    .lean();
+
+  const shelves = {
+    watchlist: [],
+    watched: [],
+    reviewed: [],
+    stats: {
+      watchlist: 0,
+      watched: 0,
+      reviewed: 0,
+    },
+  };
+
+  movies.forEach((movie) => {
+    if (movie.status === "saved") {
+      shelves.watchlist.push(movie);
+      shelves.stats.watchlist++;
+    }
+
+    if (movie.status === "watched") {
+      shelves.watched.push(movie);
+      shelves.stats.watched++;
+    }
+
+    if (movie.review?.trim().length) {
+      shelves.reviewed.push(movie);
+      shelves.stats.reviewed++;
+    }
+  });
+
+  return shelves;
+};

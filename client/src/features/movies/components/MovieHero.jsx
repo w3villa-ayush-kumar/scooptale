@@ -7,10 +7,10 @@ export default function MovieHero({ movie, ratings }) {
       <img
         src={backdrop}
         alt={movie.title}
-        className="absolute inset-0 w-full h-full object-cover opacity-40"
+        className="absolute inset-0 w-full h-full object-cover"
       />
 
-      <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/70 to-transparent" />
+      <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/50 to-transparent" />
 
       <div className="relative max-w-6xl mx-auto px-6 h-full flex items-end pb-10 gap-8">
         <img

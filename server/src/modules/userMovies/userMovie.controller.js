@@ -3,6 +3,7 @@ import {
   removeMovie,
   updateMovie,
   getUserMovies,
+  getUserShelves,
 } from "./userMovie.service.js";
 
 export const save = async (req, res) => {
@@ -102,6 +103,17 @@ export const getMine = async (req, res) => {
   } catch {
     res.status(500).json({
       error: "Failed to fetch saved movies",
+    });
+  }
+};
+
+export const getShelves = async (req, res) => {
+  try {
+    const shelves = await getUserShelves(req.user.userId);
+    res.json(shelves);
+  } catch (err) {
+    res.status(500).json({
+      error: "Failed to fetch shelves",
     });
   }
 };
