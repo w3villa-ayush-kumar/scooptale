@@ -31,14 +31,23 @@ export const fetchMovieBySearch = async (req, res) => {
   try {
     const { q } = req.query;
 
-    if (!q) {
+    if (!q || q.length < 2) {
       return res.status(400).json({
         error: "Search query is required",
       });
     }
 
     const movies = await searchMovies(q);
-    res.json(movies);
+
+    const cleaned = movies.map((m) => ({
+      id: m.id,
+      title: m.title,
+      poster: m.poster_path,
+      releaseDate: m.release_date,
+      rating: m.vote_average,
+    }));
+
+    res.json(cleaned);
   } catch (error) {
     res.status(500).json({
       error: "Failed to search movies",

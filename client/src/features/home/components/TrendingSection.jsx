@@ -1,4 +1,5 @@
-import MovieCard from "./MovieCard";
+import MovieCard from "../../movies/components/MovieCard";
+import MovieCardSkeleton from "../../movies/skeletons/MovieCardSkeleton";
 
 export default function TrendingSection({ movies = [], loading }) {
   return (
@@ -36,13 +37,7 @@ export default function TrendingSection({ movies = [], loading }) {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 px-10">
           {loading
             ? Array.from({ length: 10 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="
-            aspect-2/3 rounded-2xl
-            bg-white/10 animate-pulse
-          "
-                />
+                <MovieCardSkeleton key={i} />
               ))
             : movies
                 .slice(0, 10)

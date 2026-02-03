@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
-import api from "../services/api";
-import { useApp } from "../context/useApp";
+import api from "../../services/api.js";
+import { useApp } from "../../context/useApp.js";
 
 export default function AvatarUploader() {
   const fileRef = useRef(null);

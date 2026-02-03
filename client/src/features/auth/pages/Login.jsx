@@ -1,9 +1,8 @@
 import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import OAuthButtons from "../components/OAuthButtons";
-import api from "../services/api";
-import { AppContext } from "../context/AppContext";
-import Navbar from "../components/Navbar";
+import OAuthButtons from "../../../shared/ui/OAuthButtons";
+import api from "../../../services/api";
+import { AppContext } from "../../../context/AppContext";
 
 export default function Login() {
   const { login } = useContext(AppContext);
@@ -38,8 +37,6 @@ export default function Login() {
                  bg-linear-to-br from-slate-950 via-slate-900 to-black
                  flex items-center justify-center text-white px-6"
     >
-      {/* <AuthHomeLink /> */}
-      <Navbar variant="auth" />
       <div className="absolute -top-40 -left-40 w-125 h-125 bg-green-500/20 rounded-full blur-3xl" />
       <div className="absolute bottom-0 right-0 w-100 h-100 bg-emerald-400/15 rounded-full blur-3xl" />
 

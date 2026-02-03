@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function getRandomMovies(movies, count = 3) {
   if (!movies || movies.length === 0) return [];
@@ -9,6 +9,8 @@ function getRandomMovies(movies, count = 3) {
 }
 
 export default function Header({ movies = [], loading }) {
+  const navigate = useNavigate();
+
   const randomPosters = useMemo(() => getRandomMovies(movies, 3), [movies]);
   return (
     <header className="relative overflow-hidden bg-linear-to-br from-slate-950 via-slate-900 to-black">
@@ -73,7 +75,7 @@ export default function Header({ movies = [], loading }) {
                   key={i}
                   className={`
           absolute w-40 h-60 rounded-xl
-          bg-white/10 animate-pulse
+          skeleton
           ${i === 0 && "-rotate-10 -translate-x-30"}
           ${i === 1 && "z-10"}
           ${i === 2 && "rotate-12 translate-x-30"}
@@ -85,8 +87,9 @@ export default function Header({ movies = [], loading }) {
                   key={movie.id}
                   src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                   alt={movie.title}
+                  onClick={() => navigate(`/movies/${movie.id}`)}
                   className={`
-                absolute w-50 lg:w-70 rounded-xl shadow-2xl
+                absolute w-50 lg:w-70 rounded-xl shadow-2xl cursor-pointer
                 border border-white/10
                 transition duration-350 ease-in-out hover:scale-115 hover:z-11
                 ${i === 0 && "-rotate-10 -translate-x-30"}

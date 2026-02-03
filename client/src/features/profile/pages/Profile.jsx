@@ -1,8 +1,8 @@
-import LocationPicker from "../components/LocationPicker";
-import PlanBadge from "../components/PlanBadge";
-import AvatarUploader from "../components/AvatarUploader";
-import api from "../services/api";
-import { useApp } from "../context/useApp";
+import LocationPicker from "../../../shared/ui/LocationPicker";
+import PlanBadge from "../../../shared/ui/PlanBadge";
+import AvatarUploader from "../../../shared/ui/AvatarUploader";
+import api from "../../../services/api.js";
+import { useApp } from "../../../context/useApp.js";
 import { useEffect, useState } from "react";
 
 export default function Profile() {

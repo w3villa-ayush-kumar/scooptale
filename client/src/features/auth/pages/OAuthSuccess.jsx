@@ -1,6 +1,6 @@
 import { useEffect, useContext } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { AppContext } from "../context/AppContext";
+import { AppContext } from "../../../context/AppContext";
 
 export default function OAuthSuccess() {
   const { login } = useContext(AppContext);
