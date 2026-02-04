@@ -2,25 +2,21 @@ import jwt from "jsonwebtoken";
 import { env } from "../../config/env.js";
 import UserMovie from "../userMovies/userMovie.model.js";
 import { getMovieDetails } from "../../services/tmdb.service.js";
+import { sendError } from "../../utils/sendError.js";
 
 export const getFullMoviePage = async (req, res) => {
   try {
     const tmdbId = parseInt(req.params.tmdbId, 10);
 
     if (!tmdbId) {
-      return res.status(400).json({
-        error: "Invalid movie id",
-      });
+      return sendError(res, 400, "Invalid movie id");
     }
 
-    let userState = {
-      saved: false,
-    };
+    let userState = { saved: false };
 
     if (req.headers.authorization) {
       try {
         const token = req.headers.authorization.split(" ")[1];
-
         const decoded = jwt.verify(token, env.jwtSecret);
 
         const userMovie = await UserMovie.findOne({
@@ -42,9 +38,7 @@ export const getFullMoviePage = async (req, res) => {
     const movie = await getMovieDetails(tmdbId);
 
     if (!movie) {
-      return res.status(404).json({
-        error: "Movie not found",
-      });
+      return sendError(res, 404, "Movie not found");
     }
 
     const reviews = await UserMovie.find({
@@ -87,31 +81,29 @@ export const getFullMoviePage = async (req, res) => {
       },
     }));
 
-    res.json({
-      movie: {
-        id: movie.id,
-        title: movie.title,
-        overview: movie.overview,
-        poster: movie.poster_path,
-        backdrop: movie.backdrop_path,
-        releaseDate: movie.release_date,
-        tmdbRating: movie.vote_average,
-        runtime: movie.runtime,
+    return res.json({
+      success: true,
+      data: {
+        movie: {
+          id: movie.id,
+          title: movie.title,
+          overview: movie.overview,
+          poster: movie.poster_path,
+          backdrop: movie.backdrop_path,
+          releaseDate: movie.release_date,
+          tmdbRating: movie.vote_average,
+          runtime: movie.runtime,
+        },
+        ratings: {
+          average: Number(stats.avgRating?.toFixed(1)) || 0,
+          count: stats.reviewCount,
+        },
+        reviews: shapedReviews,
+        userState,
       },
-
-      ratings: {
-        average: Number(stats.avgRating?.toFixed(1)) || 0,
-        count: stats.reviewCount,
-      },
-
-      reviews: shapedReviews,
-      userState,
     });
   } catch (error) {
     console.error(error);
-
-    res.status(500).json({
-      error: "Failed to fetch movie page",
-    });
+    return sendError(res, 500, "Failed to fetch movie page");
   }
 };

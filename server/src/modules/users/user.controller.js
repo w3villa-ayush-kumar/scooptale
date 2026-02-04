@@ -4,28 +4,32 @@ import {
   updateProfileImage,
   getProfileForDownload,
 } from "./user.service.js";
+import { sendError } from "../../utils/sendError.js";
 
 export const getMyProfile = async (req, res) => {
   try {
     const user = await findUserById(req.user.userId);
 
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return sendError(res, 404, "User not found");
     }
 
-    res.json({
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      address: user.address,
-      location: user.location,
-      profileImageUrl: user.profileImageUrl,
-      role: user.role,
-      currentPlan: user.currentPlan,
-      isEmailVerified: user.isEmailVerified,
+    return res.json({
+      success: true,
+      data: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        address: user.address,
+        location: user.location,
+        profileImageUrl: user.profileImageUrl,
+        role: user.role,
+        currentPlan: user.currentPlan,
+        isEmailVerified: user.isEmailVerified,
+      },
     });
   } catch {
-    res.status(500).json({ error: "Failed to fetch profile" });
+    return sendError(res, 500, "Failed to fetch profile");
   }
 };
 
@@ -33,7 +37,8 @@ export const updateMyProfile = async (req, res) => {
   try {
     const user = await updateUserProfile(req.user.userId, req.body);
 
-    res.json({
+    return res.json({
+      success: true,
       message: "Profile updated successfully",
       profile: {
         name: user.name,
@@ -42,7 +47,7 @@ export const updateMyProfile = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(404).json({ error: error.message });
+    return sendError(res, 404, error.message);
   }
 };
 
@@ -52,12 +57,13 @@ export const uploadProfilePicture = async (req, res) => {
 
     const profileImageUrl = await updateProfileImage(req.user.userId, imageUrl);
 
-    res.json({
+    return res.json({
+      success: true,
       message: "Profile picture updated successfully",
       profileImageUrl,
     });
   } catch (error) {
-    res.status(404).json({ error: error.message });
+    return sendError(res, 404, error.message);
   }
 };
 
@@ -68,8 +74,8 @@ export const downloadMyProfile = async (req, res) => {
     res.setHeader("Content-Disposition", "attachment; filename=profile.json");
     res.setHeader("Content-Type", "application/json");
 
-    res.status(200).send(JSON.stringify(profileData, null, 2));
+    return res.status(200).send(JSON.stringify(profileData, null, 2));
   } catch (error) {
-    res.status(404).json({ error: error.message });
+    return sendError(res, 404, error.message);
   }
 };

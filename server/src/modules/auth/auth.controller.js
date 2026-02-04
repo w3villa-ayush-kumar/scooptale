@@ -3,6 +3,7 @@ import { sendVerificationEmail } from "../../utils/email.js";
 import User from "../users/user.model.js";
 import { env } from "../../config/env.js";
 import { generateJwtToken } from "../../utils/jwt.js";
+import { sendError } from "../../utils/sendError.js";
 
 export const signup = async (req, res) => {
   try {
@@ -12,13 +13,12 @@ export const signup = async (req, res) => {
 
     await sendVerificationEmail(user.email, verificationLink);
 
-    res.status(201).json({
+    return res.status(201).json({
+      success: true,
       message: "Signup successful. Please verify your email.",
     });
   } catch (error) {
-    res.status(400).json({
-      error: error.message,
-    });
+    return sendError(res, 400, error.message);
   }
 };
 
@@ -27,9 +27,7 @@ export const verifyEmail = async (req, res) => {
     const { token } = req.query;
 
     if (!token) {
-      return res.status(400).json({
-        error: "Token missing",
-      });
+      return sendError(res, 400, "Token missing");
     }
 
     const user = await User.findOne({
@@ -38,9 +36,7 @@ export const verifyEmail = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(400).json({
-        error: "Invalid or expire token",
-      });
+      return sendError(res, 400, "Invalid or expired token");
     }
 
     user.isEmailVerified = true;
@@ -49,13 +45,12 @@ export const verifyEmail = async (req, res) => {
 
     await user.save();
 
-    res.json({
+    return res.json({
+      success: true,
       message: "Email verified successfully",
     });
-  } catch (error) {
-    res.status(500).json({
-      error: "Email verification failed",
-    });
+  } catch {
+    return sendError(res, 500, "Email verification failed");
   }
 };
 
@@ -63,15 +58,14 @@ export const login = async (req, res) => {
   try {
     const { token, user } = await loginUser(req.body);
 
-    res.json({
+    return res.json({
+      success: true,
       message: "Login successful",
       token,
       user,
     });
   } catch (error) {
-    res.status(401).json({
-      error: error.message,
-    });
+    return sendError(res, 401, error.message);
   }
 };
 
@@ -83,5 +77,5 @@ export const socialLoginSuccess = async (req, res) => {
     role: user.role,
   });
 
-  res.redirect(`${env.clientUrl}/oauth-success?token=${token}`);
+  return res.redirect(`${env.clientUrl}/oauth-success?token=${token}`);
 };

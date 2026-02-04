@@ -1,7 +1,11 @@
 import express from "express";
-import { login, signup, verifyEmail } from "./auth.controller.js";
+import {
+  login,
+  signup,
+  verifyEmail,
+  socialLoginSuccess,
+} from "./auth.controller.js";
 import passport from "passport";
-import { socialLoginSuccess } from "./auth.controller.js";
 
 const router = express.Router();
 
@@ -13,19 +17,25 @@ router.get(
   "/google",
   passport.authenticate("google", { scope: ["profile", "email"] }),
 );
+
 router.get(
   "/google/callback",
   passport.authenticate("google", { session: false }),
   socialLoginSuccess,
 );
+
 router.get("/google/failure", (req, res) => {
-  res.status(401).json({ error: "Google authentication failed" });
+  return res.status(401).json({
+    success: false,
+    message: "Google authentication failed",
+  });
 });
 
 router.get(
   "/facebook",
   passport.authenticate("facebook", { scope: ["email"] }),
 );
+
 router.get(
   "/facebook/callback",
   passport.authenticate("facebook", {
@@ -34,9 +44,11 @@ router.get(
   }),
   socialLoginSuccess,
 );
+
 router.get("/facebook/failure", (req, res) => {
-  res.status(400).json({
-    error:
+  return res.status(400).json({
+    success: false,
+    message:
       "Facebook login failed. Your Facebook account does not have an email. Please sign up using email or Google.",
   });
 });

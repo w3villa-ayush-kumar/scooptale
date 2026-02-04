@@ -5,6 +5,7 @@ import {
   getUserMovies,
   getUserShelves,
 } from "./userMovie.service.js";
+import { sendError } from "../../utils/sendError.js";
 
 export const save = async (req, res) => {
   try {
@@ -13,7 +14,8 @@ export const save = async (req, res) => {
 
     const movie = await saveMovie(userId, tmdbId);
 
-    res.status(201).json({
+    return res.status(201).json({
+      success: true,
       message: "Movie saved successfully",
       movie: {
         id: movie._id,
@@ -24,14 +26,10 @@ export const save = async (req, res) => {
     });
   } catch (error) {
     if (error.code === 11000) {
-      return res.status(400).json({
-        error: "Movie already saved",
-      });
+      return sendError(res, 400, "Movie already saved");
     }
 
-    res.status(500).json({
-      error: error.message || "Failed to save movie",
-    });
+    return sendError(res, 500, error.message || "Failed to save movie");
   }
 };
 
@@ -43,18 +41,15 @@ export const remove = async (req, res) => {
     const deleted = await removeMovie(userId, tmdbId);
 
     if (!deleted) {
-      return res.status(404).json({
-        error: "Saved movie not found",
-      });
+      return sendError(res, 404, "Saved movie not found");
     }
 
-    res.json({
+    return res.json({
+      success: true,
       message: "Movie removed successfully",
     });
   } catch {
-    res.status(500).json({
-      error: "Failed to remove movie",
-    });
+    return sendError(res, 500, "Failed to remove movie");
   }
 };
 
@@ -65,9 +60,7 @@ export const update = async (req, res) => {
     const { rating, review, status } = req.body;
 
     if (rating && (rating < 1 || rating > 5)) {
-      return res.status(400).json({
-        error: "Rating must be between 1 and 5",
-      });
+      return sendError(res, 400, "Rating must be between 1 and 5");
     }
 
     const updated = await updateMovie(userId, tmdbId, {
@@ -77,43 +70,42 @@ export const update = async (req, res) => {
     });
 
     if (!updated) {
-      return res.status(404).json({
-        error: "Saved movie not found",
-      });
+      return sendError(res, 404, "Saved movie not found");
     }
 
-    res.json({
+    return res.json({
+      success: true,
       message: "Movie updated",
       movie: updated,
     });
   } catch (err) {
-    res.status(500).json({
-      error: err.message || "Failed to update movie",
-    });
+    return sendError(res, 500, err.message || "Failed to update movie");
   }
 };
 
 export const getMine = async (req, res) => {
   try {
     const userId = req.user.userId;
-
     const movies = await getUserMovies(userId);
 
-    res.json(movies);
-  } catch {
-    res.status(500).json({
-      error: "Failed to fetch saved movies",
+    return res.json({
+      success: true,
+      data: movies,
     });
+  } catch {
+    return sendError(res, 500, "Failed to fetch saved movies");
   }
 };
 
 export const getShelves = async (req, res) => {
   try {
     const shelves = await getUserShelves(req.user.userId);
-    res.json(shelves);
-  } catch (err) {
-    res.status(500).json({
-      error: "Failed to fetch shelves",
+
+    return res.json({
+      success: true,
+      data: shelves,
     });
+  } catch {
+    return sendError(res, 500, "Failed to fetch shelves");
   }
 };

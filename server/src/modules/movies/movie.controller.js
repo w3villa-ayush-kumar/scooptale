@@ -3,15 +3,17 @@ import {
   getTrendingMovies,
   searchMovies,
 } from "../../services/tmdb.service.js";
+import { sendError } from "../../utils/sendError.js";
 
 export const fetchTrendingMovies = async (req, res) => {
   try {
     const movies = await getTrendingMovies();
-    res.json(movies);
-  } catch (error) {
-    res.status(500).json({
-      error: "Failed to fetch trending movies",
+    return res.json({
+      success: true,
+      data: movies,
     });
+  } catch {
+    return sendError(res, 500, "Failed to fetch trending movies");
   }
 };
 
@@ -19,11 +21,13 @@ export const fetchMovieDetails = async (req, res) => {
   try {
     const { tmdbId } = req.params;
     const movie = await getMovieDetails(tmdbId);
-    res.json(movie);
-  } catch (error) {
-    res.status(500).json({
-      error: "Failed to fetch movie details",
+
+    return res.json({
+      success: true,
+      data: movie,
     });
+  } catch {
+    return sendError(res, 500, "Failed to fetch movie details");
   }
 };
 
@@ -32,9 +36,7 @@ export const fetchMovieBySearch = async (req, res) => {
     const { q } = req.query;
 
     if (!q || q.length < 2) {
-      return res.status(400).json({
-        error: "Search query is required",
-      });
+      return sendError(res, 400, "Search query is required");
     }
 
     const movies = await searchMovies(q);
@@ -47,10 +49,11 @@ export const fetchMovieBySearch = async (req, res) => {
       rating: m.vote_average,
     }));
 
-    res.json(cleaned);
-  } catch (error) {
-    res.status(500).json({
-      error: "Failed to search movies",
+    return res.json({
+      success: true,
+      data: cleaned,
     });
+  } catch {
+    return sendError(res, 500, "Failed to search movies");
   }
 };

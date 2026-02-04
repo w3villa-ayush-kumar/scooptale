@@ -1,23 +1,20 @@
 import { PLANS } from "../../config/plan.js";
 import User from "../users/user.model.js";
+import { sendError } from "../../utils/sendError.js";
 
 export const activatePlan = async (req, res) => {
   try {
     const { planName } = req.body;
-    const plan = PLANS[planName.toLowerCase()];
+    const plan = PLANS[planName?.toLowerCase()];
 
     if (!plan) {
-      return res.status(400).json({
-        error: "Invalid plan",
-      });
+      return sendError(res, 400, "Invalid plan");
     }
 
     const user = await User.findById(req.user.userId);
 
     if (!user) {
-      return res.status(404).json({
-        error: "User not found",
-      });
+      return sendError(res, 404, "User not found");
     }
 
     const now = new Date();
@@ -33,14 +30,13 @@ export const activatePlan = async (req, res) => {
 
     await user.save();
 
-    res.json({
+    return res.json({
+      success: true,
       message: "Plan activated",
       plan: user.currentPlan,
       expiresAt: user.planExpiresAt,
     });
-  } catch (error) {
-    res.status(500).json({
-      error: "Failed to activate plan",
-    });
+  } catch {
+    return sendError(res, 500, "Failed to activate plan");
   }
 };
