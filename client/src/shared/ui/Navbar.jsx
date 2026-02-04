@@ -26,8 +26,7 @@ export default function Navbar({ variant = "default" }) {
     <nav
       className={`
         flex items-center gap-2
-        bg-black/40 backdrop-blur-lg
-        border border-white/10
+       ${variant === "default" ? " bg-black/40 backdrop-blur-lg border border-white/10" : ""}
         rounded-full
         px-4 py-2
         shadow-2xl
@@ -71,6 +70,7 @@ export default function Navbar({ variant = "default" }) {
             flex items-center justify-center
             transition-all duration-300
             ${scrolled ? "h-16 w-16" : "h-19 w-19"}
+            ${variant === "auth" ? "h-22 w-22" : ""}
           `}
         >
           <img
@@ -80,6 +80,7 @@ export default function Navbar({ variant = "default" }) {
               object-cover rounded-full
               transition-all duration-300
               ${scrolled ? "h-18" : "h-22"}
+              ${variant === "auth" ? "h-26" : ""}
             `}
           />
         </div>
