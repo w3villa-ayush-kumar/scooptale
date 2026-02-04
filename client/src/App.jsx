@@ -15,7 +15,13 @@ import Shelves from "./features/shelves/pages/Shelves";
 export default function App() {
   return (
     <BrowserRouter>
-      <Toaster position="top-right" richColors closeButton expand={false} />
+      <Toaster
+        position="top-right"
+        richColors
+        closeButton
+        expand={false}
+        toastOptions={{ duration: 4000 }}
+      />
       <Routes>
         <Route element={<AppLayout />}>
           <Route path="/" element={<Home />} />
