@@ -11,8 +11,10 @@ export default function OAuthSuccess() {
     const token = params.get("token");
 
     if (token) {
-      login(token); // 🔑 SAME FLOW
-      navigate("/profile");
+      login(token);
+      setTimeout(() => {
+        navigate("/profile");
+      }, 50);
     } else {
       navigate("/login");
     }

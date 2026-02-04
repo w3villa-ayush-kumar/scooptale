@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Toaster } from "sonner";
 import Home from "./features/home/pages/Home";
 import Login from "./features/auth/pages/Login";
 import Signup from "./features/auth/pages/Signup";
@@ -9,13 +10,17 @@ import Profile from "./features/profile/pages/Profile";
 import MoviePage from "./features/movies/pages/MoviePage";
 import AuthLayout from "./layout/AuthLayout";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import Shelves from "./features/shelves/pages/Shelves";
 
 export default function App() {
   return (
     <BrowserRouter>
+      <Toaster position="top-right" richColors closeButton expand={false} />
       <Routes>
         <Route element={<AppLayout />}>
           <Route path="/" element={<Home />} />
+          <Route path="/movies/:tmdbId" element={<MoviePage />} />
+
           <Route
             path="/profile"
             element={
@@ -24,7 +29,14 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="/movies/:tmdbId" element={<MoviePage />} />
+          <Route
+            path="/my-movies"
+            element={
+              <ProtectedRoute>
+                <Shelves />
+              </ProtectedRoute>
+            }
+          />
         </Route>
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />

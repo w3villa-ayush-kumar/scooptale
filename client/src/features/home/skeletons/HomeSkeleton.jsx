@@ -1,4 +1,4 @@
-import MovieCardSkeleton from "../../features/movies/skeletons/MovieCardSkeleton";
+import MovieCardSkeleton from "../../movies/skeletons/MovieCardSkeleton";
 
 export default function HomeSkeleton() {
   return (

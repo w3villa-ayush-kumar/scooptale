@@ -2,7 +2,7 @@ import api from "../../../services/api.js";
 import { useApp } from "../../../context/useApp.js";
 
 import ProfileCard from "../components/ProfileCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Profile() {
   const { user, loadingUser, refreshUser } = useApp();
@@ -10,11 +10,25 @@ export default function Profile() {
   const [saving, setSaving] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [stats, setStats] = useState(null);
 
   const [form, setForm] = useState(() => ({
     name: user?.name || "",
     address: user?.address || "",
   }));
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await api.get("/user-movies/shelves");
+        setStats(res.data.stats);
+      } catch (err) {
+        console.log("Failed to load stats", err);
+      }
+    };
+
+    fetchStats();
+  }, []);
 
   const saveProfile = async () => {
     try {
@@ -72,11 +86,10 @@ export default function Profile() {
 
   return (
     <div className="relative min-h-screen bg-linear-to-br from-slate-950 via-slate-900 to-black text-white px-6 py-24">
-      {/* glow */}
       <div className="absolute -top-32 -left-32 w-125 h-125 bg-green-500/10 blur-2xl rounded-full" />
       <div className="absolute bottom-0 right-0 w-100 h-100 bg-emerald-400/10 blur-2xl rounded-full" />
 
-      <div className="relative max-w-5xl mx-auto">
+      <div className="relative max-w-5xl mx-auto space-y-14">
         <ProfileCard
           user={user}
           editing={editing}
@@ -89,6 +102,7 @@ export default function Profile() {
           showMap={showMap}
           setShowMap={setShowMap}
           saveLocation={saveLocation}
+          stats={stats}
         />
       </div>
     </div>

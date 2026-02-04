@@ -1,5 +1,5 @@
+import { useApp } from "../context/useApp";
 import { Navigate } from "react-router-dom";
-import { useApp } from "../context/useApp.js";
 
 export default function ProtectedRoute({ children }) {
   const { user, loadingUser } = useApp();

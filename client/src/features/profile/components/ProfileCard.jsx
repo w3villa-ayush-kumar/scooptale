@@ -4,7 +4,7 @@ import LocationCard from "./LocationCard";
 import UpgradeCard from "./UpgradeCard";
 
 export default function ProfileCard(props) {
-  const { user } = props;
+  const { user, stats } = props;
 
   return (
     <div className="relative">
@@ -12,6 +12,25 @@ export default function ProfileCard(props) {
 
       <div className="relative rounded-3xl p-10 bg-slate-950/70 border border-white/10">
         <ProfileHeader {...props} />
+        {stats && (
+          <div className="flex items-center justify-end">
+            {" "}
+            <div className="flex gap-6 text-sm text-slate-300 [&>span]:hover:scale-105 [&>span]:transition">
+              <span>
+                <strong className="text-white">{stats.watchlist}</strong> Saved
+              </span>
+
+              <span>
+                <strong className="text-white">{stats.watched}</strong> Watched
+              </span>
+
+              <span>
+                <strong className="text-white">{stats.reviewed}</strong>{" "}
+                Reviewed
+              </span>
+            </div>
+          </div>
+        )}
 
         <div className="my-8 h-px bg-white/10" />
 

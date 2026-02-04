@@ -2,8 +2,8 @@ export const PLANS = {
   free: {
     durationHours: 0,
     limits: {
-      saves: 3,
-      reviews: 2,
+      saves: 30,
+      reviews: 20,
     },
   },
   silver: {

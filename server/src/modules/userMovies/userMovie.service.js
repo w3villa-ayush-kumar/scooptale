@@ -38,23 +38,24 @@ export const updateMovie = async (userId, tmdbId, data) => {
 
   const limits = PLANS[user.currentPlan].limits;
 
-  const reviewCount = await UserMovie.countDocuments({
-    userId,
-    review: { $exists: true, $ne: "" },
-  });
+  if (data.review) {
+    const reviewCount = await UserMovie.countDocuments({
+      userId,
+      review: { $exists: true, $ne: "" },
+    });
 
-  const existing = await UserMovie.findOne({ userId, tmdbId });
-
-  if (reviewCount >= limits.reviews) {
-    throw new Error("Review limit reached. Upgrade your plan.");
+    if (reviewCount >= limits.reviews) {
+      throw new Error("Review limit reached. Upgrade your plan.");
+    }
   }
 
+  const existing = await UserMovie.findOne({ userId, tmdbId });
   if (!existing) {
     throw new Error("Save movie before updating");
   }
 
-  const finalStatus = data.status || existing.status;
-  const finalRating = data.rating || existing.rating;
+  const finalStatus = data.status !== undefined ? data.status : existing.status;
+  const finalRating = data.rating !== undefined ? data.rating : existing.rating;
 
   if (data.review && finalStatus !== "watched") {
     throw new Error("Mark movie as watched before reviewing");
@@ -64,9 +65,15 @@ export const updateMovie = async (userId, tmdbId, data) => {
     throw new Error("Provide rating when marking movie as watched");
   }
 
-  if (data.status) existing.status = data.status;
-  if (data.rating) existing.rating = data.rating;
-  if (data.review) existing.review = data.review;
+  if (data.status !== undefined) {
+    existing.status = data.status;
+  }
+  if (data.rating !== undefined) {
+    existing.rating = data.rating;
+  }
+  if (data.review !== undefined) {
+    existing.review = data.review;
+  }
 
   await existing.save();
 
@@ -105,6 +112,21 @@ export const getUserShelves = async (userId) => {
     .sort({ updatedAt: -1 })
     .lean();
 
+  const hydratedMovies = await Promise.all(
+    movies.map(async (movie) => {
+      try {
+        const tmdb = await getMovieDetails(movie.tmdbId);
+
+        return {
+          ...movie,
+          tmdb,
+        };
+      } catch {
+        return movie;
+      }
+    }),
+  );
+
   const shelves = {
     watchlist: [],
     watched: [],
@@ -116,7 +138,7 @@ export const getUserShelves = async (userId) => {
     },
   };
 
-  movies.forEach((movie) => {
+  hydratedMovies.forEach((movie) => {
     if (movie.status === "saved") {
       shelves.watchlist.push(movie);
       shelves.stats.watchlist++;

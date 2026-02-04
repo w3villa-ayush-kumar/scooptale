@@ -24,3 +24,7 @@ body,
 #root {
     background-color: #020617;
 }
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}

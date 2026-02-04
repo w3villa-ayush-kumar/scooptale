@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import api from "../../../services/api";
 import MovieHero from "../components/MovieHero";
 import MovieActions from "../components/MovieActions";
-import ReviewForm from "../components/ReviewForm";
 import ReviewsList from "../components/ReviewsList";
 import MoviePageSkeleton from "../skeletons/MoviePageSkeleton";
 
@@ -46,12 +45,6 @@ export default function MoviePage() {
 
       <div className="max-w-6xl mx-auto px-6 py-10 space-y-10">
         <MovieActions
-          tmdbId={tmdbId}
-          userState={data.userState}
-          refresh={fetchMovie}
-        />
-
-        <ReviewForm
           tmdbId={tmdbId}
           userState={data.userState}
           refresh={fetchMovie}

@@ -11,11 +11,18 @@ export const fetchPublicReviews = async (tmdbId) => {
   const reviews = await UserMovie.find({
     tmdbId,
     isPublic: true,
-    review: { $exists: true, $ne: "" },
+    review: { $exists: true, $ne: null },
   })
     .populate("userId", "name profileImageUrl")
     .sort({ createdAt: -1 })
     .lean();
+
+  const cleanedReviews = reviews
+    .map((r) => ({
+      ...r,
+      review: r.review?.trim() || null,
+    }))
+    .filter((r) => r.review);
 
   return {
     movie: {
@@ -25,6 +32,6 @@ export const fetchPublicReviews = async (tmdbId) => {
       tmdbRating: movie.vote_average,
       releaseDate: movie.release_date,
     },
-    reviews,
+    reviews: cleanedReviews,
   };
 };
