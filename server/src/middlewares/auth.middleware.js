@@ -21,3 +21,13 @@ export const authMiddleware = (req, res, next) => {
     return sendError(res, 401, "Authentication failed");
   }
 };
+
+export const roleMiddleware = (...allowedRoles) => {
+  return (req, res, next) => {
+    if (!req.user || !allowedRoles.includes(req.user.role)) {
+      return sendError(res, 403, "Forbidden: insufficient permission");
+    }
+
+    next();
+  };
+};
