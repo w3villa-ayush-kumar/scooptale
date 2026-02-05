@@ -1,12 +1,10 @@
 import api from "../../../services/api.js";
 import { useApp } from "../../../context/useApp.js";
-
 import ProfileCard from "../components/ProfileCard";
 import { useEffect, useState } from "react";
 
 export default function Profile() {
   const { user, loadingUser, refreshUser } = useApp();
-
   const [saving, setSaving] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -21,9 +19,9 @@ export default function Profile() {
     const fetchStats = async () => {
       try {
         const res = await api.get("/user-movies/shelves");
-        setStats(res.data.stats);
+        setStats(res.data.data.stats);
       } catch (err) {
-        console.log("Failed to load stats", err);
+        console.error("Failed to load stats", err);
       }
     };
 

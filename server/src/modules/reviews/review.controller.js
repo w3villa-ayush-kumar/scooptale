@@ -9,7 +9,9 @@ export const getPublicReviews = async (req, res) => {
       return sendError(res, 400, "Invalid movie id");
     }
 
-    const data = await fetchPublicReviews(tmdbId);
+    const currentUserId = req.user?.userId || null;
+
+    const data = await fetchPublicReviews(tmdbId, currentUserId);
 
     return res.json({
       success: true,

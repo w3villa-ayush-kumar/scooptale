@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import api from "../../../services/api";
 import MovieHero from "../components/MovieHero";
@@ -8,27 +8,50 @@ import MoviePageSkeleton from "../skeletons/MoviePageSkeleton";
 
 export default function MoviePage() {
   const { tmdbId } = useParams();
+
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  const fetchMovie = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await api.get(`/movies/${tmdbId}/full`);
-      setData(res.data);
-    } catch (error) {
-      console.error("Failed to load movie", error);
-    } finally {
-      setLoading(false);
-    }
-  }, [tmdbId]);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
+    const controller = new AbortController();
+
+    const fetchMovie = async () => {
+      try {
+        setLoading(true);
+        setError(false);
+        setData(null);
+
+        const res = await api.get(`/movies/${tmdbId}/full`, {
+          signal: controller.signal,
+        });
+
+        setData(res.data.data);
+      } catch (err) {
+        if (err.name !== "CanceledError" && err.name !== "AbortError") {
+          console.error("Failed to load movie", err);
+          setError(true);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchMovie();
-  }, [fetchMovie]);
+
+    return () => controller.abort();
+  }, [tmdbId]);
 
   if (loading) {
     return <MoviePageSkeleton />;
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-red-400">
+        Failed to load movie. Please try again.
+      </div>
+    );
   }
 
   if (!data) {
@@ -47,7 +70,7 @@ export default function MoviePage() {
         <MovieActions
           tmdbId={tmdbId}
           userState={data.userState}
-          refresh={fetchMovie}
+          setData={setData}
         />
 
         <ReviewsList reviews={data.reviews} />

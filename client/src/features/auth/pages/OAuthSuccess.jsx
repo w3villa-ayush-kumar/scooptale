@@ -7,18 +7,19 @@ export default function OAuthSuccess() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
 
+  const token = params.get("token");
   useEffect(() => {
-    const token = params.get("token");
-
-    if (token) {
-      login(token);
-      setTimeout(() => {
-        navigate("/profile");
-      }, 50);
-    } else {
-      navigate("/login");
+    if (!token) {
+      navigate("/login", { replace: true });
+      return;
     }
-  });
+
+    login(token);
+
+    setTimeout(() => {
+      navigate("/profile", { replace: true });
+    }, 100);
+  }, [token, login, navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center text-slate-300">

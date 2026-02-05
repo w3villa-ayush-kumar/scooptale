@@ -1,14 +1,15 @@
 import { useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useApp } from "../../../context/useApp.js";
 
 function getRandomMovies(movies, count = 3) {
   if (!movies || movies.length === 0) return [];
-
   const shuffled = [...movies].sort(() => 0.5 - Math.random());
   return shuffled.slice(0, count);
 }
 
 export default function Header({ movies = [], loading }) {
+  const { user, loadingUser } = useApp();
   const navigate = useNavigate();
 
   const randomPosters = useMemo(() => getRandomMovies(movies, 3), [movies]);
@@ -48,23 +49,17 @@ export default function Header({ movies = [], loading }) {
               classics, and publish honest reviews — raw, personal, and human.
             </p>
 
-            <div className="mt-10 flex gap-4">
-              <Link
-                to="/signup"
-                className="px-6 py-3 rounded-xl bg-green-500 text-black font-semibold
-                           hover:bg-green-400 transition"
-              >
-                Write a review
-              </Link>
-
-              <Link
-                to="/movies"
-                className="px-6 py-3 rounded-xl border border-white/20
-                           text-slate-200 hover:border-white/40 transition"
-              >
-                Browse films
-              </Link>
-            </div>
+            {!loadingUser && !user && (
+              <div className="mt-10 flex gap-4">
+                <Link
+                  to="/signup"
+                  className="px-6 py-3 rounded-xl bg-green-500 text-black font-semibold
+                 hover:bg-green-400 transition"
+                >
+                  Write a review
+                </Link>
+              </div>
+            )}
           </div>
         </div>
 

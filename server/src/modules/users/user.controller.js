@@ -21,7 +21,10 @@ export const getMyProfile = async (req, res) => {
         name: user.name,
         email: user.email,
         address: user.address,
-        location: user.location,
+        location:
+          user.location?.lat != null && user.location?.lng != null
+            ? user.location
+            : null,
         profileImageUrl: user.profileImageUrl,
         role: user.role,
         currentPlan: user.currentPlan,

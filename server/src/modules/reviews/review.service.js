@@ -1,7 +1,7 @@
 import UserMovie from "../userMovies/userMovie.model.js";
 import { getMovieDetails } from "../../services/tmdb.service.js";
 
-export const fetchPublicReviews = async (tmdbId) => {
+export const fetchPublicReviews = async (tmdbId, currentUserId = null) => {
   const movie = await getMovieDetails(tmdbId);
 
   if (!movie) {
@@ -19,8 +19,17 @@ export const fetchPublicReviews = async (tmdbId) => {
 
   const cleanedReviews = reviews
     .map((r) => ({
-      ...r,
-      review: r.review?.trim() || null,
+      _id: r._id,
+      rating: r.rating,
+      review: r.review?.trim(),
+      user: {
+        _id: r.userId?._id,
+        name: r.userId?.name,
+        profileImageUrl: r.userId?.profileImageUrl,
+        isCurrentUser:
+          currentUserId &&
+          r.userId?._id.toString() === currentUserId.toString(),
+      },
     }))
     .filter((r) => r.review);
 

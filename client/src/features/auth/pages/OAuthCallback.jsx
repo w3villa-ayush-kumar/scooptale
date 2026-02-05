@@ -1,33 +1,32 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useEffect } from "react";
+// import { useNavigate } from "react-router-dom";
 
-export default function OAuthCallback() {
-  const navigate = useNavigate();
+// export default function OAuthCallback() {
+//   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchToken = async () => {
-      try {
-        // Backend already returned JSON
-        const res = await fetch(window.location.href);
-        const data = await res.json();
+//   useEffect(() => {
+//     const fetchToken = async () => {
+//       try {
+//         const res = await fetch(window.location.href);
+//         const data = await res.json();
 
-        if (data.token) {
-          localStorage.setItem("token", data.token);
-          navigate("/");
-        } else {
-          navigate("/login");
-        }
-      } catch {
-        navigate("/login");
-      }
-    };
+//         if (data.token) {
+//           localStorage.setItem("token", data.token);
+//           navigate("/");
+//         } else {
+//           navigate("/login");
+//         }
+//       } catch {
+//         navigate("/login");
+//       }
+//     };
 
-    fetchToken();
-  }, [navigate]);
+//     fetchToken();
+//   }, [navigate]);
 
-  return (
-    <div className="min-h-screen flex items-center justify-center text-slate-300">
-      Signing you in...
-    </div>
-  );
-}
+//   return (
+//     <div className="min-h-screen flex items-center justify-center text-slate-300">
+//       Signing you in...
+//     </div>
+//   );
+// }

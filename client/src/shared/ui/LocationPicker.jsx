@@ -11,7 +11,6 @@ export default function LocationPicker({ onSelect, initialLocation }) {
   const autocompleteRef = useRef(null);
   const mapRef = useRef(null);
   const geocoderRef = useRef(null);
-
   const [position, setPosition] = useState(() => initialLocation || null);
   const [selectedAddress, setSelectedAddress] = useState("");
 

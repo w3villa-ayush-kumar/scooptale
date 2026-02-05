@@ -16,7 +16,7 @@ export default function StarRating({
           className={`
             text-2xl
             ${star <= rating ? "text-yellow-400" : "text-gray-500"}
-            ${!readOnly ? "cursor-pointer" : ""}
+            ${!readOnly ? "cursor-pointer hover:text-yellow-400 hover:scale-103" : ""}
           `}
         >
           ★

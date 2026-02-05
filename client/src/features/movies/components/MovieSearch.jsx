@@ -24,7 +24,7 @@ export default function MovieSearch() {
 
       try {
         const res = await api.get(`/movies/search?q=${query}`);
-        setResults(res.data);
+        setResults(res.data.data);
       } catch {
         setResults([]);
       }

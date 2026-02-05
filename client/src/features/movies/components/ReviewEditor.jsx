@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import api from "../../../services/api";
 import StarRating from "../../../shared/ui/StarRating";
+import { toast } from "sonner";
 
 export default function ReviewEditor({
   tmdbId,
   existingState,
-  refresh,
+  setData,
   closeEditor,
 }) {
   const [rating, setRating] = useState(existingState?.rating || 0);
@@ -14,27 +15,76 @@ export default function ReviewEditor({
 
   const submit = async () => {
     if (!rating) {
-      alert("Please select a rating");
+      toast.error("Please select a rating");
       return;
     }
 
-    try {
-      setLoading(true);
+    if (loading) return;
 
+    setLoading(true);
+
+    try {
       await api.patch(`/user-movies/${tmdbId}`, {
         status: "watched",
         rating,
         review,
       });
 
-      refresh();
+      const updatedUserState = {
+        saved: true,
+        status: "watched",
+        rating,
+        review,
+      };
+
+      setData((prev) => {
+        if (!prev) return prev;
+
+        const reviews = [...prev.reviews];
+
+        const index = reviews.findIndex((r) => r.user?.isCurrentUser === true);
+
+        if (index !== -1) {
+          reviews[index] = {
+            ...reviews[index],
+            rating,
+            review,
+          };
+        } else {
+          reviews.unshift({
+            rating,
+            review,
+            user: {
+              name: "You",
+              isCurrentUser: true,
+            },
+          });
+        }
+
+        return {
+          ...prev,
+          userState: updatedUserState,
+          reviews,
+        };
+      });
+
+      toast.success("Review saved!");
       closeEditor();
     } catch (err) {
-      alert(err.response?.data?.error);
+      toast.error(
+        err.response?.data?.message ||
+          err.response?.data?.error ||
+          "Failed to save review",
+      );
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    setRating(existingState?.rating || 0);
+    setReview(existingState?.review || "");
+  }, [existingState]);
 
   return (
     <div className="bg-slate-900 p-6 rounded-xl space-y-4 border border-white/10">
@@ -65,11 +115,13 @@ export default function ReviewEditor({
           disabled={loading}
           className="
             px-5 py-2
-            bg-green-500
-            hover:bg-green-400 hover:scale-103 transition cursor-pointer
-            text-black
-            rounded-lg
-            font-semibold
+            bg-green-500 text-black
+            rounded-lg font-semibold
+            cursor-pointer
+            transition
+            hover:bg-green-400
+            hover:scale-103
+            disabled:opacity-60
           "
         >
           {loading ? "Saving..." : "Save"}
@@ -77,7 +129,7 @@ export default function ReviewEditor({
 
         <button
           onClick={closeEditor}
-          className="px-5 py-2 bg-white/10 hover:bg-white/20 hover:scale-103 transition cursor-pointer rounded-lg"
+          className="px-5 py-2 bg-white/10 hover:bg-white/20 hover:scale-103 cursor-pointer rounded-lg"
         >
           Cancel
         </button>

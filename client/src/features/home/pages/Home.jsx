@@ -11,7 +11,7 @@ export default function Home() {
     const fetchMovies = async () => {
       try {
         const res = await api.get("/movies/trending");
-        setMovies(res.data || []);
+        setMovies(res.data.data || []);
       } catch (error) {
         console.error("Failed to fetch movies", error);
       } finally {

@@ -1,38 +1,28 @@
-import { env } from "../../config/env.js";
+import { PLANS } from "../../config/plan.js";
 import { stripe } from "../../config/stripe.js";
+import { env } from "../../config/env.js";
 
-const PLAN_PRICE = {
-  silver: 50000,
-  gold: 100000,
-};
+export const createCheckoutSession = async (user, { plan }) => {
+  const selectedPlan = PLANS[plan];
 
-const VALID_DURATION = [1, 6, 12];
-
-export const createCheckoutSession = async (user, { plan, duration }) => {
-  if (!PLAN_PRICE[plan]) {
+  if (!selectedPlan || plan === "free") {
     throw new Error("Invalid plan selected");
   }
 
-  if (!VALID_DURATION.includes(duration)) {
-    throw new Error("Invalid plan duration");
-  }
-
-  if (user.plan !== "free" && user.planExpiresAt > new Date()) {
+  if (user.currentPlan !== "free" && user.planExpiresAt > new Date()) {
     throw new Error("Active plan already exists");
   }
 
   return stripe.checkout.sessions.create({
     mode: "payment",
     payment_method_types: ["card"],
+
     billing_address_collection: "required",
-    shipping_address_collection: {
-      allowed_countries: ["IN"],
-    },
 
     metadata: {
       userId: user.userId,
       plan,
-      duration,
+      duration: selectedPlan.durationHours,
     },
 
     line_items: [
@@ -40,15 +30,15 @@ export const createCheckoutSession = async (user, { plan, duration }) => {
         price_data: {
           currency: "inr",
           product_data: {
-            name: `${plan.toUpperCase()} plan (${duration} hours)`,
+            name: `${plan.toUpperCase()} plan`,
           },
-          unit_amount: PLAN_PRICE[plan],
+          unit_amount: selectedPlan.price,
         },
         quantity: 1,
       },
     ],
 
-    success_url: `${env.clientUrl}/success`,
-    cancel_url: `${env.clientUrl}/cancel`,
+    success_url: `${env.clientUrl}/billing/success`,
+    cancel_url: `${env.clientUrl}/plans`,
   });
 };

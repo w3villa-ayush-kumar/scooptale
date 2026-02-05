@@ -2,16 +2,32 @@ import { useState } from "react";
 import api from "../../../services/api";
 import ReviewEditor from "./ReviewEditor";
 import StarRating from "../../../shared/ui/StarRating";
+import { toast } from "sonner";
 
-export default function MovieActions({ tmdbId, userState, refresh }) {
+export default function MovieActions({ tmdbId, userState, setData }) {
   const [editing, setEditing] = useState(false);
 
   const saveMovie = async () => {
     try {
       await api.post(`/user-movies/${tmdbId}`);
-      refresh();
+
+      setData((prev) => ({
+        ...prev,
+        userState: {
+          saved: true,
+          status: "saved",
+        },
+      }));
+
+      toast.success("Saved!");
     } catch (err) {
-      alert(err.response?.data?.error);
+      if (err.response?.status === 401) return;
+
+      toast.error(
+        err.response?.data?.message ||
+          err.response?.data?.error ||
+          "Something went wrong",
+      );
     }
   };
 
@@ -19,7 +35,7 @@ export default function MovieActions({ tmdbId, userState, refresh }) {
     return (
       <button
         onClick={saveMovie}
-        className="px-6 py-3 bg-green-500 hover:bg-green-400 hover:scale-103 transition cursor-pointer text-black rounded-lg font-semibold"
+        className="px-6 py-3 bg-green-500 hover:bg-green-400 hover:scale-103 cursor-pointer transition text-black rounded-lg font-semibold"
       >
         Save Movie
       </button>
@@ -31,7 +47,7 @@ export default function MovieActions({ tmdbId, userState, refresh }) {
       {userState.status === "saved" && !editing && (
         <button
           onClick={() => setEditing(true)}
-          className="px-6 py-3 bg-blue-500 hover:bg-blue-400 hover:scale-103 transition cursor-pointer rounded-lg font-semibold"
+          className="px-6 py-3 bg-blue-500 hover:bg-blue-400 hover:scale-103 cursor-pointer transition rounded-lg font-semibold"
         >
           Mark as Watched
         </button>
@@ -45,7 +61,7 @@ export default function MovieActions({ tmdbId, userState, refresh }) {
 
           <button
             onClick={() => setEditing(true)}
-            className="px-4 py-2 bg-white/10 hover:bg-white/20 hover:scale-103 transition cursor-pointer rounded-lg"
+            className="px-4 py-2 bg-white/10 hover:bg-white/20 hover:scale-103 cursor-pointer rounded-lg"
           >
             Edit
           </button>
@@ -56,7 +72,7 @@ export default function MovieActions({ tmdbId, userState, refresh }) {
         <ReviewEditor
           tmdbId={tmdbId}
           existingState={userState}
-          refresh={refresh}
+          setData={setData}
           closeEditor={() => setEditing(false)}
         />
       )}

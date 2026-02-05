@@ -1,4 +1,8 @@
+import { useNavigate } from "react-router-dom";
+
 export default function UpgradeCard() {
+  const navigate = useNavigate();
+
   return (
     <div className="relative mt-10">
       <div className="absolute inset-0 rounded-2xl bg-linear-to-r from-green-500/20 to-emerald-400/20 blur-xl" />
@@ -13,7 +17,10 @@ export default function UpgradeCard() {
           </p>
         </div>
 
-        <button className="px-5 py-2 rounded-xl bg-green-500 text-black font-semibold hover:bg-green-400 transition duration-300">
+        <button
+          onClick={() => navigate("/plans")}
+          className="px-5 py-2 rounded-xl bg-green-500 text-black font-semibold hover:bg-green-400 transition duration-300"
+        >
           Upgrade
         </button>
       </div>

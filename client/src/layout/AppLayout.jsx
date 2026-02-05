@@ -9,7 +9,6 @@ export default function AppLayout() {
 
   return (
     <div className="min-h-screen text-white">
-      {/* LEFT SIDE */}
       <div className="fixed top-6 left-6 z-50 flex items-center gap-3">
         <MovieSearch />
 
@@ -32,7 +31,6 @@ export default function AppLayout() {
         )}
       </div>
 
-      {/* RIGHT SIDE */}
       <div className="fixed top-6 right-6 z-50">
         <Navbar />
       </div>

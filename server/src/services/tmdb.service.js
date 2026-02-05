@@ -3,6 +3,7 @@ import { env } from "../config/env.js";
 
 const tmdbClient = axios.create({
   baseURL: env.tmdbBaseUrl,
+  timeout: 8000,
   params: {
     api_key: env.tmdbApiKey,
   },
@@ -20,7 +21,12 @@ export const searchMovies = async (query) => {
   return response.data.results;
 };
 
-export const getMovieDetails = async (tmdbId) => {
-  const response = await tmdbClient.get(`/movie/${tmdbId}`);
-  return response.data;
+export const getMovieDetails = async (id) => {
+  try {
+    const res = await tmdbClient.get(`/movie/${id}`);
+    return res.data;
+  } catch (err) {
+    console.error("TMDB ERROR:", err.code);
+    return null;
+  }
 };

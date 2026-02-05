@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 export default function ShelfMovieCard({ movie }) {
   const navigate = useNavigate();
 
-  const poster = `https://image.tmdb.org/t/p/w500/${movie.tmdb.poster_path}`;
-
   if (!movie?.tmdb) return null;
+
+  const poster = movie.tmdb.poster_path
+    ? `https://image.tmdb.org/t/p/w500${movie.tmdb.poster_path}`
+    : null;
 
   return (
     <div
@@ -19,7 +21,18 @@ export default function ShelfMovieCard({ movie }) {
         transition
       "
     >
-      <img src={poster} className="w-full h-60 object-cover" alt="" />
+      {poster ? (
+        <img
+          src={poster}
+          className="w-full h-60 object-cover"
+          alt={movie.tmdb.title || "Movie poster"}
+          loading="lazy"
+        />
+      ) : (
+        <div className="w-full h-60 flex items-center justify-center bg-slate-800 text-slate-400 text-sm">
+          No Poster
+        </div>
+      )}
     </div>
   );
 }

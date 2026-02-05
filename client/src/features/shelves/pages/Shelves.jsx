@@ -12,7 +12,7 @@ export default function Shelves() {
     const fetchShelves = async () => {
       try {
         const res = await api.get("/user-movies/shelves");
-        setData(res.data);
+        setData(res.data.data);
       } catch (err) {
         console.error("Failed to load shelves", err);
       }

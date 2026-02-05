@@ -44,8 +44,11 @@ const userSchema = new mongoose.Schema(
     address: String,
 
     location: {
-      lat: Number,
-      lng: Number,
+      type: {
+        lat: Number,
+        lng: Number,
+      },
+      default: null,
     },
 
     currentPlan: {

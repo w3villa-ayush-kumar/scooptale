@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import api from "../services/api";
 import { AppContext } from "./AppContext";
 
@@ -7,10 +7,11 @@ export default function AppProvider({ children }) {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [loadingUser, setLoadingUser] = useState(true);
 
-  const login = (token) => {
+  const login = useCallback((token) => {
     localStorage.setItem("token", token);
     setToken(token);
-  };
+    setLoadingUser(true);
+  }, []);
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -34,7 +35,7 @@ export default function AppProvider({ children }) {
 
       try {
         const { data } = await api.get("/user/me");
-        setUser(data);
+        setUser(data.data);
       } catch (err) {
         console.error(err);
         logout();
@@ -47,11 +48,15 @@ export default function AppProvider({ children }) {
   }, [token]);
 
   const refreshUser = async () => {
-    if (!token) return;
+    try {
+      setLoadingUser(true);
 
-    const { data } = await api.get("/user/me");
+      const res = await api.get("/user/me");
 
-    setUser(data);
+      setUser(res.data.data);
+    } finally {
+      setLoadingUser(false);
+    }
   };
 
   return (
