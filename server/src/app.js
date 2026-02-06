@@ -11,10 +11,27 @@ import reviewRoutes from "./modules/reviews/review.routes.js";
 import passport from "passport";
 import "./config/passport.js";
 import { stripeWebhook } from "./modules/payments/stripe.webhook.js";
+import helmet from "helmet";
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = [process.env.CLIENT_URL];
+
+app.use(helmet());
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("CORS not allowed"));
+    },
+    credentials: true,
+  }),
+);
 
 app.post(
   "/payments/webhook",
