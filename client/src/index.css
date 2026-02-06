@@ -28,3 +28,15 @@ body,
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
 }
+
+.no-print {
+    display: none !important;
+}
+
+.pdf-mode * {
+    background-image: none !important;
+}
+
+.pdf-mode {
+    background: #020617 !important;
+}

@@ -1,7 +1,6 @@
 import express from "express";
 import { authMiddleware } from "../../middlewares/auth.middleware.js";
 import {
-  downloadMyProfile,
   getMyProfile,
   updateMyProfile,
   uploadProfilePicture,
@@ -18,6 +17,5 @@ router.post(
   upload.single("avatar"),
   uploadProfilePicture,
 );
-router.get("/me/download", authMiddleware, downloadMyProfile);
 
 export default router;

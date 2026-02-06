@@ -13,7 +13,7 @@ export default function ProfileCard(props) {
       <div className="relative rounded-3xl p-6 sm:p-10 bg-slate-950/70 border border-white/10">
         <ProfileHeader {...props} />
         {stats && (
-          <div className="flex items-center justify-end">
+          <div className="flex items-center justify-end pt-3">
             {" "}
             <div className="grid grid-cols-3 sm:flex gap-4 sm:gap-6 text-sm text-slate-300 [&>span]:hover:scale-105 [&>span]:transition">
               <span>

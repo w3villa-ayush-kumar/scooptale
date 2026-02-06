@@ -1,5 +1,6 @@
 import AvatarUploader from "../../../shared/ui/AvatarUploader";
 import PlanBadge from "../../../shared/ui/PlanBadge";
+import { Download } from "lucide-react";
 
 export default function ProfileHeader({
   user,
@@ -10,6 +11,7 @@ export default function ProfileHeader({
   saving,
   saveProfile,
   cancelEditing,
+  downloadProfile,
 }) {
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
@@ -35,31 +37,50 @@ export default function ProfileHeader({
         </div>
       </div>
 
-      {editing ? (
-        <div className="flex gap-3">
+      <div className="flex flex-wrap gap-3">
+        {!editing && (
           <button
-            onClick={cancelEditing}
-            className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 transition"
+            onClick={downloadProfile}
+            className="
+              flex items-center gap-2
+              px-4 py-2
+              rounded-xl cursor-pointer
+              bg-blue-500 hover:bg-blue-400
+              text-black font-semibold
+              transition
+            "
           >
-            Cancel
+            <Download size={18} />
+            Download
           </button>
+        )}
 
+        {editing ? (
+          <>
+            <button
+              onClick={cancelEditing}
+              className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 transition"
+            >
+              Cancel
+            </button>
+
+            <button
+              onClick={saveProfile}
+              disabled={saving}
+              className="px-5 py-2 rounded-xl bg-green-500 text-black font-semibold hover:bg-green-400 transition disabled:opacity-60"
+            >
+              {saving ? "Saving..." : "Save"}
+            </button>
+          </>
+        ) : (
           <button
-            onClick={saveProfile}
-            disabled={saving}
-            className="px-5 py-2 rounded-xl bg-green-500 text-black font-semibold hover:bg-green-400 transition disabled:opacity-60"
+            onClick={() => setEditing(true)}
+            className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 transition text-sm"
           >
-            {saving ? "Saving..." : "Save"}
+            Edit
           </button>
-        </div>
-      ) : (
-        <button
-          onClick={() => setEditing(true)}
-          className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 transition text-sm"
-        >
-          Edit
-        </button>
-      )}
+        )}
+      </div>
     </div>
   );
 }

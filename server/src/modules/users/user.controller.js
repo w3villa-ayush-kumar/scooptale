@@ -2,7 +2,6 @@ import {
   findUserById,
   updateUserProfile,
   updateProfileImage,
-  getProfileForDownload,
 } from "./user.service.js";
 import { sendError } from "../../utils/sendError.js";
 
@@ -66,19 +65,6 @@ export const uploadProfilePicture = async (req, res) => {
       message: "Profile picture updated successfully",
       profileImageUrl,
     });
-  } catch (error) {
-    return sendError(res, 404, error.message);
-  }
-};
-
-export const downloadMyProfile = async (req, res) => {
-  try {
-    const profileData = await getProfileForDownload(req.user.userId);
-
-    res.setHeader("Content-Disposition", "attachment; filename=profile.json");
-    res.setHeader("Content-Type", "application/json");
-
-    return res.status(200).send(JSON.stringify(profileData, null, 2));
   } catch (error) {
     return sendError(res, 404, error.message);
   }

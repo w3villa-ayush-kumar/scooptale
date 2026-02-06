@@ -1,15 +1,21 @@
 import api from "../../../services/api.js";
 import { useApp } from "../../../context/useApp.js";
 import ProfileCard from "../components/ProfileCard";
-import { useEffect, useState } from "react";
+import ProfilePdf from "../pages/ProfilePdf";
+import { useEffect, useState, useRef } from "react";
 import { toast } from "sonner";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 export default function Profile() {
   const { user, loadingUser, refreshUser } = useApp();
+
   const [saving, setSaving] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [editing, setEditing] = useState(false);
   const [stats, setStats] = useState(null);
+
+  const pdfRef = useRef(null);
 
   const [form, setForm] = useState(() => ({
     name: user?.name || "",
@@ -23,72 +29,66 @@ export default function Profile() {
         setStats(res.data.data.stats);
       } catch (err) {
         console.error("Failed to load stats", err);
-
-        toast.error("Unable to load profile stats", {
-          id: "stats-error",
-        });
       }
     };
 
     fetchStats();
   }, []);
 
-  const saveProfile = async () => {
-    if (!form.name.trim()) {
-      toast.error("Name cannot be empty");
-      return;
-    }
+  const downloadProfile = async () => {
+    if (!pdfRef.current) return;
 
     try {
-      setSaving(true);
+      toast.loading("Preparing your premium PDF...");
 
-      await toast.promise(
-        api.put("/user/me", form),
-        {
-          loading: "Saving profile...",
-          success: "Profile updated successfully",
-          error: "Failed to update profile",
-        },
-        { id: "profile-save" },
+      await document.fonts.ready;
+
+      const images = pdfRef.current.querySelectorAll("img");
+
+      await Promise.all(
+        [...images].map((img) => {
+          if (img.complete) return Promise.resolve();
+
+          return new Promise((resolve) => {
+            img.onload = resolve;
+            img.onerror = resolve;
+          });
+        }),
       );
 
+      const canvas = await html2canvas(pdfRef.current, {
+        scale: 3,
+        useCORS: true,
+        backgroundColor: "#ffffff",
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "px",
+        format: [canvas.width, canvas.height],
+      });
+
+      pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
+
+      pdf.save("scooptale-profile.pdf");
+
+      toast.dismiss();
+      toast.success("Profile downloaded!");
+    } catch (err) {
+      console.error(err);
+      toast.dismiss();
+      toast.error("Failed to export PDF");
+    }
+  };
+
+  const saveProfile = async () => {
+    try {
+      setSaving(true);
+      await api.put("/user/me", form);
       await refreshUser();
       setEditing(false);
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const cancelEditing = () => {
-    setEditing(false);
-    setForm({
-      name: user?.name || "",
-      address: user?.address || "",
-    });
-  };
-
-  const saveLocation = async (location) => {
-    try {
-      setSaving(true);
-
-      await toast.promise(
-        api.put("/user/me", {
-          address: location.address,
-          location: {
-            lat: location.lat,
-            lng: location.lng,
-          },
-        }),
-        {
-          loading: "Updating location...",
-          success: "Location updated",
-          error: "Failed to update location",
-        },
-        { id: "location-save" },
-      );
-
-      await refreshUser();
-      setShowMap(false);
     } finally {
       setSaving(false);
     }
@@ -111,11 +111,19 @@ export default function Profile() {
   }
 
   return (
-    <div className="relative min-h-screen bg-linear-to-br from-slate-950 via-slate-900 to-black text-white px-4 sm:px-6 py-12 sm:py20 pt-30">
-      <div className="absolute -top-32 -left-32 w-125 h-125 bg-green-500/10 blur-2xl rounded-full" />
-      <div className="absolute bottom-0 right-0 w-100 h-100 bg-emerald-400/10 blur-2xl rounded-full" />
+    <div className="relative min-h-screen bg-linear-to-br from-slate-950 via-slate-900 to-black text-white px-6 py-24">
+      <div
+        style={{
+          position: "fixed",
+          left: "-10000px",
+          top: 0,
+          pointerEvents: "none",
+        }}
+      >
+        <ProfilePdf ref={pdfRef} user={user} stats={stats} />
+      </div>
 
-      <div className="relative max-w-5xl px-4 sm:px-6 mx-auto space-y-14">
+      <div className="relative max-w-5xl mx-auto space-y-14">
         <ProfileCard
           user={user}
           editing={editing}
@@ -124,11 +132,11 @@ export default function Profile() {
           setForm={setForm}
           saving={saving}
           saveProfile={saveProfile}
-          cancelEditing={cancelEditing}
+          cancelEditing={() => setEditing(false)}
           showMap={showMap}
           setShowMap={setShowMap}
-          saveLocation={saveLocation}
           stats={stats}
+          downloadProfile={downloadProfile}
         />
       </div>
     </div>

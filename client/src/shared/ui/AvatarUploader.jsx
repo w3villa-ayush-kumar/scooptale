@@ -49,6 +49,7 @@ export default function AvatarUploader() {
       <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border border-white/20 group-hover:border-green-400 transition">
         {user?.profileImageUrl ? (
           <img
+            crossOrigin="anonymous"
             key={user.profileImageUrl}
             src={user.profileImageUrl}
             alt="avatar"

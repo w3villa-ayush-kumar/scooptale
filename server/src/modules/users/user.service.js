@@ -50,23 +50,3 @@ export const updateProfileImage = async (userId, imageUrl) => {
 
   return user.profileImageUrl;
 };
-
-export const getProfileForDownload = async (userId) => {
-  const user = await User.findById(userId).lean();
-
-  if (!user) {
-    throw new Error("User not found");
-  }
-
-  return {
-    name: user.name,
-    email: user.email,
-    address: user.address,
-    location: user.location,
-    profileImageUrl: user.profileImageUrl,
-    role: user.role,
-    currentPlan: user.currentPlan,
-    isEmailVerified: user.isEmailVerified,
-    createdAt: user.createdAt,
-  };
-};
