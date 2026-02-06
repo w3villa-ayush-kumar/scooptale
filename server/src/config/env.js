@@ -8,6 +8,7 @@ export const env = {
   jwtSecret: process.env.JWT_SECRET,
   backendUrl: process.env.BACKEND_URL,
   clientUrl: process.env.CLIENT_URL,
+  backendUrl: process.env.BACKEND_URL,
 
   emailHost: process.env.EMAIL_HOST,
   emailPort: process.env.EMAIL_PORT,
