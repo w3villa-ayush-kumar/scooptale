@@ -4,7 +4,6 @@ export default function LocationCard({
   showMap,
   setShowMap,
   saveLocation,
-  saving,
   user,
 }) {
   return (
@@ -23,10 +22,6 @@ export default function LocationCard({
           onSelect={saveLocation}
           initialLocation={user?.location}
         />
-      )}
-
-      {saving && showMap && (
-        <p className="text-green-400 text-sm mt-2">Saving location...</p>
       )}
     </div>
   );

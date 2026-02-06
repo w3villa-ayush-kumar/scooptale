@@ -13,21 +13,43 @@ passport.use(
     },
     async (_, __, profile, done) => {
       try {
-        const email = profile.emails[0].value;
+        const email = profile.emails?.[0]?.value?.toLowerCase();
+
+        if (!email) {
+          return done(
+            new Error("Google account does not provide an email."),
+            null,
+          );
+        }
+
+        const avatar = profile.photos?.[0]?.value;
 
         let user = await User.findOne({ email });
 
-        if (!user) {
-          user = await User.create({
-            name: profile.displayName,
-            email,
-            providers: ["google"],
-            isEmailVerified: true,
-          });
-        } else if (!user.providers.includes("google")) {
-          user.providers.push("google");
-          await user.save();
+        if (user) {
+          if (!user.providers?.google?.id) {
+            user.providers.google = { id: profile.id };
+
+            if (!user.profileImageUrl && avatar) {
+              user.profileImageUrl = avatar;
+            }
+
+            await user.save();
+          }
+
+          return done(null, user);
         }
+
+        user = await User.create({
+          name: profile.displayName,
+          email,
+          providers: {
+            google: { id: profile.id },
+          },
+          isEmailVerified: true,
+          profileImageUrl: avatar,
+        });
+
         return done(null, user);
       } catch (err) {
         return done(err, null);
@@ -42,34 +64,51 @@ passport.use(
       clientID: process.env.FACEBOOK_APP_ID,
       clientSecret: process.env.FACEBOOK_APP_SECRET,
       callbackURL: `${process.env.BACKEND_URL}/auth/facebook/callback`,
-      profileFields: ["id", "displayName", "emails"],
+      profileFields: ["id", "displayName", "emails", "photos"],
+      enableProof: true,
     },
     async (_, __, profile, done) => {
       try {
-        const email = profile.emails?.[0]?.value;
+        const email = profile.emails?.[0]?.value?.toLowerCase();
 
         if (!email) {
           return done(
             new Error(
-              "Facebook login failed: email permission missing. Please use email signup or Google login.",
+              "Facebook account does not provide an email. Please use Google or email signup.",
             ),
             null,
           );
         }
 
+        const avatar =
+          profile.photos?.[0]?.value ||
+          `https://graph.facebook.com/${profile.id}/picture?type=large`;
+
         let user = await User.findOne({ email });
 
-        if (!user) {
-          user = await User.create({
-            name: profile.displayName,
-            email,
-            providers: ["facebook"],
-            isEmailVerified: true,
-          });
-        } else if (!user.providers.includes("facebook")) {
-          user.providers.push("facebook");
-          await user.save();
+        if (user) {
+          if (!user.providers?.facebook?.id) {
+            user.providers.facebook = { id: profile.id };
+
+            if (!user.profileImageUrl && avatar) {
+              user.profileImageUrl = avatar;
+            }
+
+            await user.save();
+          }
+
+          return done(null, user);
         }
+
+        user = await User.create({
+          name: profile.displayName,
+          email,
+          providers: {
+            facebook: { id: profile.id },
+          },
+          isEmailVerified: true,
+          profileImageUrl: avatar,
+        });
 
         return done(null, user);
       } catch (error) {

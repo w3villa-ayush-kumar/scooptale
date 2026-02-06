@@ -11,7 +11,7 @@ export default function AddressCard({ editing, form, setForm, user }) {
         />
       ) : (
         <p className="mt-2 text-lg font-medium">
-          {user?.address || "Not added"}
+          {user?.address || "No address added"}
         </p>
       )}
     </div>

@@ -20,7 +20,10 @@ router.get(
 
 router.get(
   "/google/callback",
-  passport.authenticate("google", { session: false }),
+  passport.authenticate("google", {
+    session: false,
+    failureRedirect: `${process.env.CLIENT_URL}/oauth-failure`,
+  }),
   socialLoginSuccess,
 );
 
@@ -33,14 +36,16 @@ router.get("/google/failure", (req, res) => {
 
 router.get(
   "/facebook",
-  passport.authenticate("facebook", { scope: ["email"] }),
+  passport.authenticate("facebook", {
+    scope: ["email"],
+  }),
 );
 
 router.get(
   "/facebook/callback",
   passport.authenticate("facebook", {
     session: false,
-    failureRedirect: "/auth/facebook/failure",
+    failureRedirect: `${process.env.CLIENT_URL}/oauth-failure`,
   }),
   socialLoginSuccess,
 );

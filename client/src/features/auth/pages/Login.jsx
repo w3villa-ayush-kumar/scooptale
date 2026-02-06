@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import OAuthButtons from "../../../shared/ui/OAuthButtons";
 import api from "../../../services/api";
 import { AppContext } from "../../../context/AppContext";
+import { toast } from "sonner";
 
 export default function Login() {
   const { login } = useContext(AppContext);
@@ -13,19 +14,19 @@ export default function Login() {
   });
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
 
     try {
       const { data } = await api.post("/auth/login", form);
 
+      toast.success("Logged in successfully");
+
       login(data.token);
     } catch (err) {
-      setError(err.response?.data?.error || "Login failed");
+      toast.error(err?.response?.data?.error || "Invalid email or password");
     } finally {
       setLoading(false);
     }
@@ -60,8 +61,6 @@ export default function Login() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {error && <p className="text-red-400 text-sm">{error}</p>}
-
             <input
               type="email"
               placeholder="Email"

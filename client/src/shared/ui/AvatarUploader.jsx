@@ -46,10 +46,10 @@ export default function AvatarUploader() {
       }`}
       onClick={!uploading ? handleClick : undefined}
     >
-      <div className="relative h-24 w-24 rounded-full overflow-hidden border border-white/20 group-hover:border-green-400 transition">
-        {/* Avatar */}
+      <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border border-white/20 group-hover:border-green-400 transition">
         {user?.profileImageUrl ? (
           <img
+            key={user.profileImageUrl}
             src={user.profileImageUrl}
             alt="avatar"
             className={`
@@ -59,12 +59,11 @@ export default function AvatarUploader() {
           `}
           />
         ) : (
-          <div className="h-full w-full bg-green-500 flex items-center justify-center text-3xl font-bold text-black">
+          <div className="h-full w-full bg-green-500 flex items-center justify-center text-2xl sm:text-3xl font-bold text-black">
             {user?.name?.charAt(0)?.toUpperCase()}
           </div>
         )}
 
-        {/* ✅ Hover Overlay (ONLY when NOT uploading) */}
         {!uploading && (
           <div
             className="

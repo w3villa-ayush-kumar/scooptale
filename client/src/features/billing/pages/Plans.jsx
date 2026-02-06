@@ -1,6 +1,7 @@
 import { useState } from "react";
 import api from "../../../services/api";
 import { useApp } from "../../../context/useApp";
+import { toast } from "sonner";
 
 const PLAN_CONFIG = [
   {
@@ -27,11 +28,15 @@ export default function Plans() {
 
       const res = await api.post("/payments/checkout", { plan });
 
+      toast.loading("Redirecting to secure checkout...", {
+        id: "checkout",
+      });
+
       window.location.href = res.data.url;
     } catch (err) {
       console.error(err);
 
-      alert(err.response?.data?.error || "Checkout failed");
+      toast.error(err?.response?.data?.error || "Failed to start checkout");
     } finally {
       setLoading(null);
     }

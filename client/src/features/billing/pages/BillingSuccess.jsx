@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../../../context/useApp";
 import api from "../../../services/api";
+import { toast } from "sonner";
 
 export default function BillingSuccess() {
   const navigate = useNavigate();
@@ -20,12 +21,20 @@ export default function BillingSuccess() {
         if (updatedUser.currentPlan !== "free") {
           clearInterval(interval);
 
+          toast.success("Your plan is now active!", {
+            id: "plan-success",
+          });
+
           setTimeout(() => {
             navigate("/my-movies", { replace: true });
           }, 800);
         }
       } catch (err) {
         console.error(err);
+
+        toast.error("Failed to confirm your plan. Refresh the page.", {
+          id: "plan-error",
+        });
       }
     };
 

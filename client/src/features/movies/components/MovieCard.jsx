@@ -6,7 +6,10 @@ export default function MovieCard({ movie }) {
 
   return (
     <div
-      onClick={() => navigate(`/movies/${movie.id}`)}
+      onClick={() => {
+        if (!movie?.id) return;
+        navigate(`/movies/${movie.id}`);
+      }}
       className="
         group relative overflow-hidden rounded-2xl
         bg-white/5 border border-white/10

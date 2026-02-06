@@ -16,15 +16,24 @@ export default function Header({ movies = [], loading }) {
   return (
     <header className="relative overflow-hidden bg-linear-to-br from-slate-950 via-slate-900 to-black">
       <div
-        className="absolute -top-32 -left-32 h-125 w-125 rounded-full
+        className="absolute -top-32 -left-32 w-72 h-72 sm:w-125 sm:h-125 rounded-full
                       bg-green-500/20 blur-3xl"
       />
       <div
-        className="absolute bottom-0 right-0 h-100 w-100 rounded-full
+        className="absolute bottom-0 right-0 w-60 h-60 sm:w-100 sm:h-100 rounded-full
                       bg-emerald-400/10 blur-3xl"
       />
 
-      <div className="relative max-w-7xl mx-auto px-6 py-28 grid md:grid-cols-2 gap-16 items-center">
+      <div
+        className="
+  relative max-w-7xl mx-auto
+  px-5 sm:px-6
+  py-16 sm:py-24 md:py-28
+  grid md:grid-cols-2
+  gap-10 md:gap-16
+  items-center
+"
+      >
         <div className="relative">
           <div
             className="absolute inset-0 -rotate-2 rounded-3xl
@@ -37,24 +46,47 @@ export default function Header({ movies = [], loading }) {
               Community powered cinema
             </span>
 
-            <h1 className="mt-4 text-4xl lg:text-5xl font-bold leading-tight">
+            <h1
+              className="
+  mt-4
+  text-3xl sm:text-4xl lg:text-5xl
+  font-bold
+  leading-tight
+"
+            >
               Movies aren't just watched.
               <span className="block text-green-400 mt-2">
                 They're experienced.
               </span>
             </h1>
 
-            <p className="mt-6 text-slate-400 text-lg leading-relaxed">
+            <p
+              className="
+  mt-5
+  text-slate-400
+  text-base sm:text-lg
+  leading-relaxed
+  max-w-xl
+"
+            >
               Scooptale is where movie lovers explore trending films, revisit
               classics, and publish honest reviews — raw, personal, and human.
             </p>
 
             {!loadingUser && !user && (
-              <div className="mt-10 flex gap-4">
+              <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <Link
                   to="/signup"
-                  className="px-6 py-3 rounded-xl bg-green-500 text-black font-semibold
-                 hover:bg-green-400 transition"
+                  className="
+  w-full sm:w-auto
+  px-6 py-3
+  rounded-xl
+  bg-green-500
+  text-black
+  font-semibold
+  hover:bg-green-400
+  transition
+"
                 >
                   Write a review
                 </Link>
@@ -63,7 +95,7 @@ export default function Header({ movies = [], loading }) {
           </div>
         </div>
 
-        <div className="relative hidden md:flex items-center justify-center">
+        <div className="relative hidden lg:flex items-center justify-center">
           {loading
             ? [0, 1, 2].map((i) => (
                 <div
@@ -82,7 +114,7 @@ export default function Header({ movies = [], loading }) {
                   key={movie.id}
                   src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                   alt={movie.title}
-                  onClick={() => navigate(`/movies/${movie.id}`)}
+                  onClick={() => !loading && navigate(`/movies/${movie.id}`)}
                   className={`
                 absolute w-50 lg:w-70 rounded-xl shadow-2xl cursor-pointer
                 border border-white/10

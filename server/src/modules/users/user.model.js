@@ -24,8 +24,12 @@ const userSchema = new mongoose.Schema(
     },
 
     providers: {
-      type: [String],
-      default: [],
+      google: {
+        id: String,
+      },
+      facebook: {
+        id: String,
+      },
     },
 
     isEmailVerified: {
@@ -68,5 +72,8 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
+
+userSchema.index({ "providers.google.id": 1 }, { sparse: true });
+userSchema.index({ "providers.facebook.id": 1 }, { sparse: true });
 
 export default mongoose.model("User", userSchema);

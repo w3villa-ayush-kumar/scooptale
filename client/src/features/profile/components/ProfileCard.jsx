@@ -10,12 +10,12 @@ export default function ProfileCard(props) {
     <div className="relative">
       <div className="absolute inset-0 -rotate-2 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10" />
 
-      <div className="relative rounded-3xl p-10 bg-slate-950/70 border border-white/10">
+      <div className="relative rounded-3xl p-6 sm:p-10 bg-slate-950/70 border border-white/10">
         <ProfileHeader {...props} />
         {stats && (
           <div className="flex items-center justify-end">
             {" "}
-            <div className="flex gap-6 text-sm text-slate-300 [&>span]:hover:scale-105 [&>span]:transition">
+            <div className="grid grid-cols-3 sm:flex gap-4 sm:gap-6 text-sm text-slate-300 [&>span]:hover:scale-105 [&>span]:transition">
               <span>
                 <strong className="text-white">{stats.watchlist}</strong> Saved
               </span>

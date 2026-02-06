@@ -28,6 +28,7 @@ export const getMyProfile = async (req, res) => {
         profileImageUrl: user.profileImageUrl,
         role: user.role,
         currentPlan: user.currentPlan,
+        isPlanActive: user.isPlanActive,
         isEmailVerified: user.isEmailVerified,
       },
     });

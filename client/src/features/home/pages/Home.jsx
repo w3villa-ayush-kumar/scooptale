@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../../../services/api";
 import Header from "../components/Header";
 import TrendingSection from "../components/TrendingSection";
+import { toast } from "sonner";
 
 export default function Home() {
   const [movies, setMovies] = useState([]);
@@ -14,6 +15,12 @@ export default function Home() {
         setMovies(res.data.data || []);
       } catch (error) {
         console.error("Failed to fetch movies", error);
+        setMovies([]);
+
+        toast.error(
+          error?.response?.data?.message || "Unable to load movies right now.",
+          { id: "movies-error" },
+        );
       } finally {
         setLoading(false);
       }

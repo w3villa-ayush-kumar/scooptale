@@ -24,8 +24,9 @@ export const fetchUsers = async ({
     query.isPlanActive = isPlanActive === "true";
   }
 
-  const pageNumber = Number(page);
-  const pageSize = Number(limit);
+  const pageNumber = Math.max(1, Number(page) || 1);
+  const pageSize = Math.min(50, Number(limit) || 10);
+
   const skip = (pageNumber - 1) * pageSize;
   const total = await User.countDocuments(query);
 
@@ -34,10 +35,18 @@ export const fetchUsers = async ({
     .select("name email role currentPlan isPlanActive planExpiresAt createdAt")
     .sort({ createdAt: -1 })
     .skip(skip)
-    .limit(pageSize);
+    .limit(pageSize)
+    .lean();
+
+  const now = new Date();
+
+  const updatedUsers = users.map((u) => ({
+    ...u,
+    isPlanActive: u.planExpiresAt && u.planExpiresAt > now,
+  }));
 
   return {
-    data: users,
+    data: updatedUsers,
     meta: {
       total,
       page: pageNumber,

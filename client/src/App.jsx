@@ -13,6 +13,9 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import Shelves from "./features/shelves/pages/Shelves";
 import Plans from "./features/billing/pages/Plans";
 import BillingSuccess from "./features/billing/pages/BillingSuccess";
+import AdminUsers from "./features/admin/pages/AdminUsers";
+import AdminRoute from "./routes/AdminRoute";
+import OAuthFailure from "./features/auth/pages/OAuthFailure";
 
 export default function App() {
   return (
@@ -64,12 +67,20 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+
+          <Route
+            path="/admin/users"
+            element={
+              <AdminRoute>
+                <AdminUsers />
+              </AdminRoute>
+            }
+          />
         </Route>
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          {/* <Route path="/auth/google/callback" element={<OAuthCallback />} /> */}
-          {/* <Route path="/auth/facebook/callback" element={<OAuthCallback />} /> */}
+          <Route path="/oauth-failure" element={<OAuthFailure />} />
           <Route path="/oauth-success" element={<OAuthSuccess />} />
         </Route>
       </Routes>

@@ -1,6 +1,7 @@
 import { useEffect, useContext } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { AppContext } from "../../../context/AppContext";
+import { toast } from "sonner";
 
 export default function OAuthSuccess() {
   const { login } = useContext(AppContext);
@@ -8,17 +9,22 @@ export default function OAuthSuccess() {
   const [params] = useSearchParams();
 
   const token = params.get("token");
+
   useEffect(() => {
     if (!token) {
       navigate("/login", { replace: true });
       return;
     }
 
-    login(token);
+    const initAuth = async () => {
+      await login(token);
 
-    setTimeout(() => {
+      toast.success("Logged in successfully");
+
       navigate("/profile", { replace: true });
-    }, 100);
+    };
+
+    initAuth();
   }, [token, login, navigate]);
 
   return (

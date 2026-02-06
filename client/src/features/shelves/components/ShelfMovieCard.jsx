@@ -8,7 +8,6 @@ export default function ShelfMovieCard({ movie }) {
   const poster = movie.tmdb.poster_path
     ? `https://image.tmdb.org/t/p/w500${movie.tmdb.poster_path}`
     : null;
-
   return (
     <div
       onClick={() => navigate(`/movies/${movie.tmdbId}`)}
@@ -27,6 +26,9 @@ export default function ShelfMovieCard({ movie }) {
           className="w-full h-60 object-cover"
           alt={movie.tmdb.title || "Movie poster"}
           loading="lazy"
+          onError={(e) => {
+            e.currentTarget.style.display = "none";
+          }}
         />
       ) : (
         <div className="w-full h-60 flex items-center justify-center bg-slate-800 text-slate-400 text-sm">

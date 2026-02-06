@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import OAuthButtons from "../../../shared/ui/OAuthButtons";
 import api from "../../../services/api";
+import { toast } from "sonner";
 
 export default function Signup() {
   const [form, setForm] = useState({
@@ -10,22 +11,26 @@ export default function Signup() {
     password: "",
   });
 
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState("");
-  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
-    setSuccess("");
 
     try {
       await api.post("/auth/signup", form);
-      setSuccess("Check your email to verify your account.");
+
+      toast.success("Account created! Check your email to verify.");
+
       setForm({ name: "", email: "", password: "" });
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
     } catch (err) {
-      setError(err.response?.data?.error || "Signup failed");
+      toast.error(err?.response?.data?.error || "Signup failed");
     } finally {
       setLoading(false);
     }
@@ -76,9 +81,6 @@ export default function Signup() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {success && <p className="text-green-400 text-sm">{success}</p>}
-            {error && <p className="text-red-400 text-sm">{error}</p>}
-
             <input
               type="text"
               placeholder="Name"

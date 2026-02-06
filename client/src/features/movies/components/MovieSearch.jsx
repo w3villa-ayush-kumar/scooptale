@@ -17,7 +17,7 @@ export default function MovieSearch() {
 
   useEffect(() => {
     const delay = setTimeout(async () => {
-      if (query.length < 2) {
+      if (query.trim().length < 2) {
         setResults([]);
         return;
       }
@@ -51,7 +51,11 @@ export default function MovieSearch() {
   }, []);
 
   return (
-    <div ref={wrapperRef} className="relative w-64">
+    <div
+      ref={wrapperRef}
+      className="relative w-36 sm:w-52 md:w-64
+"
+    >
       <div
         onClick={handleFocus}
         className="
@@ -81,6 +85,12 @@ export default function MovieSearch() {
           "
         />
       </div>
+
+      {query.trim().length >= 2 && results.length === 0 && (
+        <div className="absolute top-14 left-0 w-80 p-4 text-sm text-slate-400">
+          No movies found.
+        </div>
+      )}
 
       {results.length > 0 && (
         <div

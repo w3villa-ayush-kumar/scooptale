@@ -15,7 +15,7 @@ export default function ReviewEditor({
 
   const submit = async () => {
     if (!rating) {
-      toast.error("Please select a rating");
+      toast.error("Please add a rating before saving");
       return;
     }
 
@@ -68,13 +68,14 @@ export default function ReviewEditor({
         };
       });
 
-      toast.success("Review saved!");
+      toast.success("Your review has been saved", { id: "review-saved" });
       closeEditor();
     } catch (err) {
       toast.error(
         err.response?.data?.message ||
           err.response?.data?.error ||
           "Failed to save review",
+        { id: "review-error" },
       );
     } finally {
       setLoading(false);
@@ -87,7 +88,7 @@ export default function ReviewEditor({
   }, [existingState]);
 
   return (
-    <div className="bg-slate-900 p-6 rounded-xl space-y-4 border border-white/10">
+    <div className="bg-slate-900 p-4 sm:p-6 rounded-xl space-y-4 border border-white/10">
       <h3 className="text-lg font-semibold">
         {existingState?.status === "watched"
           ? "Edit Review"

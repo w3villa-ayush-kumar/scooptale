@@ -7,10 +7,13 @@ export default function AppProvider({ children }) {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [loadingUser, setLoadingUser] = useState(true);
 
-  const login = useCallback((token) => {
+  const login = useCallback(async (token) => {
     localStorage.setItem("token", token);
     setToken(token);
-    setLoadingUser(true);
+
+    const res = await api.get("/user/me");
+    setUser(res.data.data);
+    setLoadingUser(false);
   }, []);
 
   const logout = () => {

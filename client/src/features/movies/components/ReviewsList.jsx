@@ -5,7 +5,12 @@ export default function ReviewsList({ reviews }) {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-semibold">User Reviews</h2>
+      <h2
+        className="text-xl sm:text-2xl
+ font-semibold"
+      >
+        User Reviews
+      </h2>
 
       {reviews.map((r, i) => (
         <div
@@ -19,7 +24,7 @@ export default function ReviewsList({ reviews }) {
             {r.user?.isCurrentUser ? "You" : r.user?.name} ⭐ {r.rating}
           </div>
 
-          <p className="text-slate-300 mt-2">{r.review}</p>
+          {r.review && <p className="text-slate-300 mt-2">{r.review}</p>}
         </div>
       ))}
     </div>

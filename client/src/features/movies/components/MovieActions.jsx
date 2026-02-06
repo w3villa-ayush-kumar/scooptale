@@ -6,9 +6,12 @@ import { toast } from "sonner";
 
 export default function MovieActions({ tmdbId, userState, setData }) {
   const [editing, setEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const saveMovie = async () => {
     try {
+      setSaving(true);
+
       await api.post(`/user-movies/${tmdbId}`);
 
       setData((prev) => ({
@@ -19,15 +22,20 @@ export default function MovieActions({ tmdbId, userState, setData }) {
         },
       }));
 
-      toast.success("Saved!");
+      toast.success("Movie saved to your library", { id: "save-movie" });
     } catch (err) {
-      if (err.response?.status === 401) return;
+      if (err.response?.status === 401) {
+        toast.error("Please login to save movies");
+        return;
+      }
 
       toast.error(
         err.response?.data?.message ||
           err.response?.data?.error ||
           "Something went wrong",
       );
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -35,9 +43,10 @@ export default function MovieActions({ tmdbId, userState, setData }) {
     return (
       <button
         onClick={saveMovie}
-        className="px-6 py-3 bg-green-500 hover:bg-green-400 hover:scale-103 cursor-pointer transition text-black rounded-lg font-semibold"
+        disabled={saving}
+        className="px-6 py-3 w-full sm:w-auto bg-green-500 hover:bg-green-400 hover:scale-103 cursor-pointer transition text-black rounded-lg font-semibold"
       >
-        Save Movie
+        {saving ? "Saving..." : "Save Movie"}
       </button>
     );
   }
