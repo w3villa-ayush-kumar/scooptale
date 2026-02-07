@@ -11,7 +11,7 @@ export const signup = async (req, res) => {
 
     const verificationLink = `${env.backendUrl}/auth/verify-email?token=${user.emailVerificationToken}`;
 
-    sendVerificationEmail(user.email, verificationLink).catch((err) => {
+    await sendVerificationEmail(user.email, verificationLink).catch((err) => {
       console.error("Email failed:", err);
     });
 
