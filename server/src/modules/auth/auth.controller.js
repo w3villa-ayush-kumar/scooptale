@@ -20,8 +20,7 @@ export const signup = async (req, res) => {
       message: "Signup successful. Please verify your email.",
     });
   } catch (error) {
-    console.error("SIGNUP ERROR:", error);
-    return sendError(res, 400, error.message);
+    return sendError(res, 400, error.message, error);
   }
 };
 
