@@ -10,11 +10,8 @@ export const signup = async (req, res) => {
     const user = await registerUser(req.body);
 
     const verificationLink = `${env.backendUrl}/auth/verify-email?token=${user.emailVerificationToken}`;
-    console.log("Sending email...");
 
-    await sendVerificationEmail(user.email, verificationLink).catch((err) => {
-      console.log("Email sent");
-    });
+    sendVerificationEmail(user.email, verificationLink).catch(console.error);
 
     return res.status(201).json({
       success: true,
