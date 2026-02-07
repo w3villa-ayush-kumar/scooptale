@@ -18,20 +18,18 @@ const app = express();
 const allowedOrigins = [process.env.CLIENT_URL];
 
 app.use(helmet());
+
 app.use(
   cors({
     origin: function (origin, callback) {
+      console.log("====== CORS CHECK ======");
+      console.log("ENV CLIENT_URL:", process.env.CLIENT_URL);
+      console.log("REQUEST ORIGIN:", origin);
+
       if (!origin) return callback(null, true);
 
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-
-      console.log("Blocked by CORS:", origin);
-
-      return callback(new Error("CORS not allowed"));
+      return callback(null, true); // allow everything TEMP
     },
-    credentials: true,
   }),
 );
 
