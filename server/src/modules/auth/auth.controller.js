@@ -11,11 +11,12 @@ export const signup = async (req, res) => {
 
     const verificationLink = `${env.backendUrl}/auth/verify-email?token=${user.emailVerificationToken}`;
 
-    sendVerificationEmail(user.email, verificationLink).catch(console.error);
+    sendVerificationEmail(user.email, verificationLink);
 
     return res.status(201).json({
       success: true,
-      message: "Signup successful. Please verify your email.",
+      message:
+        "Signup successful! Please verify your email. If you don't see it, check Spam.",
     });
   } catch (error) {
     return sendError(res, 400, error.message, error);
