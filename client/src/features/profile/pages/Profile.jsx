@@ -94,6 +94,30 @@ export default function Profile() {
     }
   };
 
+  const saveLocation = async (location) => {
+    try {
+      setSaving(true);
+
+      await api.put("/user/me", {
+        address: location.address,
+        location: {
+          lat: location.lat,
+          lng: location.lng,
+        },
+      });
+
+      await refreshUser();
+      setShowMap(false);
+
+      toast.success("Location updated!");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to save location");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   if (loadingUser) {
     return (
       <div className="min-h-screen flex items-center justify-center text-slate-400">
@@ -135,6 +159,7 @@ export default function Profile() {
           cancelEditing={() => setEditing(false)}
           showMap={showMap}
           setShowMap={setShowMap}
+          saveLocation={saveLocation}
           stats={stats}
           downloadProfile={downloadProfile}
         />
