@@ -9,8 +9,8 @@ export const env = {
   backendUrl: process.env.BACKEND_URL,
   clientUrl: process.env.CLIENT_URL,
 
-  // emailHost: process.env.EMAIL_HOST,
-  // emailPort: process.env.EMAIL_PORT,
+  emailHost: process.env.EMAIL_HOST,
+  emailPort: process.env.EMAIL_PORT,
   emailUser: process.env.EMAIL_USER,
   emailPass: process.env.EMAIL_PASS,
   // emailFrom: process.env.EMAIL_FROM,
