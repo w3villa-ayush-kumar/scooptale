@@ -3,8 +3,8 @@ export const PLANS = {
     durationHours: 0,
     price: 0,
     limits: {
-      saves: 30,
-      reviews: 20,
+      saves: 3,
+      reviews: 2,
     },
   },
 
@@ -13,7 +13,7 @@ export const PLANS = {
     price: 50000,
     limits: {
       saves: 10,
-      reviews: 20,
+      reviews: 6,
     },
   },
 

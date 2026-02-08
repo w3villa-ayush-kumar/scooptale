@@ -26,7 +26,7 @@ export default function BillingSuccess() {
           });
 
           setTimeout(() => {
-            navigate("/my-movies", { replace: true });
+            navigate("/profile", { replace: true });
           }, 800);
         }
       } catch (err) {

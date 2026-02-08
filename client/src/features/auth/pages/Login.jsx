@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import OAuthButtons from "../../../shared/ui/OAuthButtons";
 import api from "../../../services/api";
 import { AppContext } from "../../../context/AppContext";
@@ -7,6 +7,7 @@ import { toast } from "sonner";
 
 export default function Login() {
   const { login } = useContext(AppContext);
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     email: "",
@@ -25,6 +26,8 @@ export default function Login() {
       toast.success("Logged in successfully");
 
       login(data.token);
+
+      navigate("/");
     } catch (err) {
       toast.error(err?.response?.data?.error || "Invalid email or password");
     } finally {
